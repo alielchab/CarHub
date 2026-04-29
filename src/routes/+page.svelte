@@ -1,2 +1,2 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<h1 class="welcome_page">Welcome to CarHub</h1>
+<img src="/images/logo/carhub_logo.png" alt="CarHub Logo" class="logo" width=800 height=800>
