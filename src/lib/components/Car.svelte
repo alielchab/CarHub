@@ -4,7 +4,7 @@
 
 
 <a class="link" href={"cars/" + car._id}>
-    <img src={car.image} alt="" class="card-image">
+    <img src={car.bild} alt="" class="card-image">
     <div class="car">
         <div class="carPara"><b>{car.marke}</b></div>
         <div class="carPara">{car.modell}</div>

@@ -1,6 +1,6 @@
 <script>
     import Car from "$lib/components/Car.svelte";
-    let data = $props();
+    let {data} = $props();
 
 </script>
 

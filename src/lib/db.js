@@ -1,5 +1,6 @@
-import { MongoClient, ObjectId } from "mongodb";
-import { DB_URI } from "$env/static/private";
+import { MongoClient} from "mongodb";
+import { DB_URI, DB_NAME } from "$env/static/private";
+
 
 const client = new MongoClient(DB_URI);
 
@@ -7,11 +8,11 @@ await client.connect();
 const db = client.db("carhub");
 
 
+
 async function getCars() {
     let cars = [];
     try {
         const collection = db.collection("cars");
-
         const query = {};
 
         cars = await collection.find(query).toArray();
@@ -25,21 +26,46 @@ async function getCars() {
 }   
 
 
+// Get car by id
 async function getCar(id) {
-    let car = null;
-    try {
-        const collection = db.collection("cars");
-        const query = { _id: new ObjectId(id) };
-        car = await collection.findOne(query);
-        if (!car) {
-           console.log("Car not found with id:", id);
-        } else {
-            car._id = car._id.toString();
-        }
-    } catch (error) {
-        console.error("Error fetching car:", error);
+  let car = null;
+  try {
+    const collection = db.collection("cars");
+    const query = { _id: new ObjectId(id) }; // filter by id
+    car = await collection.findOne(query);
+
+    if (!car) {
+      console.log("No car with id " + id);
+      // TODO: errorhandling
+    } else {
+      car._id = car._id.toString(); // convert ObjectId to String
     }
-    return car;
+  } catch (error) {
+    // TODO: errorhandling
+    console.log(error.message);
+  }
+  return car;
 }
+
+async function createCar(car) { 
+  try {
+    const collection = db.collection("cars");
+    const result = await collection.insertOne(car);
+    return result.insertedId.toString(); // convert ObjectId to String
+  } catch (error) {
+    // TODO: errorhandling
+    console.log(error.message);
+  }
+  return null;
+}
+
+
+
+// export all functions so that they can be used in other files
+export default {
+  getCars,
+  getCar,
+createCar,
+};
 
 
