@@ -1,15 +1,36 @@
 <script>
-    let { car } = $props(); 
+    let { car } = $props();
 </script>
 
-
-<a class="link" href={"cars/" + car._id}>
-    <img src={car.bild} alt="" class="card-image">
-    <div class="car">
-        <div class="carPara"><b>{car.marke}</b></div>
-        <div class="carPara">{car.modell}</div>
-        <div class="carPara">{car.baujahr}</div>
-        <div class="carPara">{car.leistung} </div>
-        <div class="carPara">{car.preis}</div>
+<div class="car-row">
+    <div>
+        <input type="checkbox" />
     </div>
-</a>
+
+    <div class="car-main">
+        <img src={car.mainImage} alt={car.marke} width="100" height="100" />
+
+        <div>
+            <span class="badge">1 DAY</span>
+
+            <h3>{car.marke} {car.modell}</h3>
+
+            <div class="actions">
+                <a href={"movies/" + car._id}>View vehicle</a>
+                <!-- <a href={"cars/" + car._id + "/edit"}>Edit data</a> -->
+
+                <form method="POST" action="?/delete">
+                    <input type="hidden" name="id" value={car._id} />
+                    <button type="submit">Remove</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div>{car.baujahr}</div>
+    <div>{car.preis}.-</div>
+    <div>{car.kilometer || "-"}</div>
+    <div>{car.views || "-"}</div>
+
+    <button class="plus-btn">+</button>
+</div>

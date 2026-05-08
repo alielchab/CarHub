@@ -1,17 +1,33 @@
 <script>
-	import favicon from '$lib/assets/favicon.svg';
-	import './styles/style.css'
+  import favicon from "$lib/assets/favicon.svg";
+  import "./styles/style.css";
 
-	let { children } = $props();
+  let { children, data } = $props();
 </script>
 
 <svelte:head>
-	<link rel="icon" href={favicon} />
+  <link rel="icon" href={favicon} />
 </svelte:head>
 
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light"><a class="navbar-brand" href="/"><img src="/images/logo/carhub_logo.png" alt="CarHub Logo" class="logo" width=100 height=100></a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="/"
+    ><img
+      src="/images/logo/carhub_logo_transparent.png"
+      alt="CarHub Logo"
+      class="logo"
+      width="150"
+      height="100"
+    /></a
+  >
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavDropdown"
+    aria-controls="navbarNavDropdown"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarNavDropdown">
@@ -20,17 +36,26 @@
         <a class="nav-link" href="/">Home</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Search</a>
+        <a class="nav-link" href="/search">Search</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Top Listing</a>
+        <a class="nav-link" href="/toplisting">Top Listing</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/cars">My Cars</a>
+        <a class="nav-link" href="/allcars">All Cars</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Login</a>
-      </li>
+      {#if data.user}
+        <li class="nav-item">
+          <a class="nav-link" href="/cars">My Cars</a>
+        </li>
+        <form method="POST" action="/logout" style="display:inline;">
+          <button type="submit">Logout</button>
+        </form>
+      {:else}
+        <li class="nav-item">
+          <a class="nav-link" href="/login">Login</a>
+        </li>
+      {/if}
     </ul>
   </div>
 </nav>

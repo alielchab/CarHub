@@ -6,7 +6,7 @@
 <div class="container">
   <a href="/cars">Back</a>
   <h1>Add a Car</h1>
-  <form method="POST" action="?/create">
+  <form method="POST" action="?/create" enctype="multipart/form-data">
     <div class="mb-3">
         <label for="" class="form-label">Marke</label>
         <input name="marke" type="text" class="form-control" placeholder="Marke" />
@@ -27,11 +27,16 @@
         <label for="" class="form-label">Preis</label>
         <input name="preis" type="text" class="form-control" placeholder="Preis" />
       </div>
+      <div class="mb-3">
+        <label for="" class="form-label">Bilder</label>
+        <input name="images" type="file" class="form-control" accept="image/*" multiple/>
+      </div>
+
+      {#if from?.error}
+        <p class="text-danger">{from.error}</p>
+      {/if}
+
       <button type="submit" class="btn btn-primary">Add a Car</button>
   </form>
 </div>
 
-
-{#if form?.success}
-  <p>Car created</p>
-{/if}
