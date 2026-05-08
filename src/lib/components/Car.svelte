@@ -15,9 +15,12 @@
 
             <h3>{car.marke} {car.modell}</h3>
 
+            
             <div class="actions">
-                <a href={"movies/" + car._id}>View vehicle</a>
-                <!-- <a href={"cars/" + car._id + "/edit"}>Edit data</a> -->
+                <a href={"cars/" + car._id}>Deactivate</a>
+                <a href={"cars/" + car._id}>Top Listing</a>
+                <a href={"cars/" + car._id}>View vehicle</a>
+                <a href={"cars/" + car._id + "/edit"}>Edit data</a>
 
                 <form method="POST" action="?/delete">
                     <input type="hidden" name="id" value={car._id} />

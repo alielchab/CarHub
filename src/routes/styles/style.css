@@ -11,7 +11,7 @@
     color: #333;
 }
 
-
+/** Styles for My Cars Page**/
 
 .garage-page {
   background: #ededed;
@@ -200,3 +200,370 @@
     gap: 16px;
   }
 }
+
+
+/** Styles for Vehicle Detail Page **/
+
+.detail-page {
+  background: #fff;
+  min-height: 100vh;
+  padding: 24px 0 60px;
+}
+
+.detail-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.breadcrumb {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 24px;
+  color: #0067b8;
+  font-size: 16px;
+}
+
+.breadcrumb a {
+  color: #0067b8;
+  text-decoration: none;
+}
+
+.hero-gallery {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 4px;
+  height: 560px;
+  margin-bottom: 32px;
+}
+
+.main-photo,
+.thumb {
+  position: relative;
+  overflow: hidden;
+  background: #eee;
+}
+
+.main-photo img,
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.side-photos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+
+.image-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  color: white;
+  font-size: 22px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 56px;
+}
+
+.left-content h1 {
+  font-size: 36px;
+  margin: 0 0 28px;
+}
+
+.spec-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 80px;
+  max-width: 720px;
+  margin-bottom: 28px;
+}
+
+.spec-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 22px;
+}
+
+.icon {
+  width: 28px;
+  display: inline-block;
+}
+
+.show-data,
+.blue-link,
+.whatsapp-link {
+  color: #0067b8;
+  text-decoration: none;
+}
+
+.show-data {
+  display: inline-block;
+  margin-bottom: 28px;
+  font-size: 18px;
+}
+
+.left-content hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 0 0 28px;
+}
+
+.left-content h2 {
+  font-size: 28px;
+  margin-bottom: 24px;
+}
+
+.info-box {
+  background: #dceeff;
+  border-left: 4px solid #1683e2;
+  padding: 20px;
+  display: flex;
+  gap: 18px;
+  margin-bottom: 32px;
+  font-size: 17px;
+}
+
+.right-card {
+  position: sticky;
+  top: 20px;
+  align-self: start;
+}
+
+.right-card h2 {
+  font-size: 38px;
+  margin: 0 0 16px;
+}
+
+.right-card .blue-link {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 17px;
+}
+
+.contact-btn {
+  width: 100%;
+  margin-top: 20px;
+  padding: 18px;
+  background: #fff200;
+  border: 1px solid #d6ca00;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.phone-btn {
+  width: 100%;
+  margin-top: 14px;
+  padding: 16px;
+  background: white;
+  border: 1px solid #999;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.button-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.button-row button {
+  padding: 16px;
+  background: white;
+  border: 1px solid #999;
+  font-size: 17px;
+  cursor: pointer;
+}
+
+.whatsapp-link {
+  display: block;
+  margin: 20px 0;
+  font-size: 17px;
+}
+
+.dealer-box {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 22px;
+  font-size: 17px;
+}
+
+@media (max-width: 900px) {
+  .hero-gallery {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .main-photo {
+    height: 360px;
+  }
+
+  .side-photos {
+    height: 260px;
+  }
+
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .right-card {
+    position: static;
+  }
+
+  .spec-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/** Styles for create Page **/
+
+.create-page {
+  background: #ededed;
+  min-height: 100vh;
+  padding: 30px 0 60px;
+}
+
+.create-container {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.create-header {
+  background: white;
+  border-radius: 4px;
+  padding: 28px;
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+.create-header h1 {
+  margin: 0;
+  font-size: 34px;
+  font-weight: 700;
+}
+
+.create-header p {
+  margin-top: 10px;
+  color: #555;
+}
+
+.form-section {
+  background: white;
+  border-radius: 4px;
+  margin-bottom: 18px;
+  overflow: hidden;
+  border: 1px solid #ddd;
+}
+
+.section-title {
+  padding: 20px 24px;
+  border-bottom: 1px solid #eee;
+}
+
+.section-title h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.form-grid {
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px 28px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.field label {
+  margin-bottom: 8px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.field input,
+.field select {
+  height: 48px;
+  padding: 0 14px;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  font-size: 15px;
+  background: white;
+}
+
+.field input:focus,
+.field select:focus {
+  outline: none;
+  border-color: #0067b8;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.double-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.bottom-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+}
+
+.back-btn {
+  padding: 12px 24px;
+  border: 1px solid #999;
+  background: white;
+  text-decoration: none;
+  color: black;
+  border-radius: 4px;
+}
+
+.next-btn {
+  padding: 14px 34px;
+  background: #fff200;
+  border: none;
+  font-weight: 700;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.next-btn:hover {
+  background: #f0e000;
+}
+
+@media (max-width: 900px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .double-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+
+
+
+
+

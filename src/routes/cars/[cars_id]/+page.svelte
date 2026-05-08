@@ -1,65 +1,122 @@
 <script>
-   let { data } = $props();
+  let { data } = $props();
 
-//   let currentIndex = $state(0);
+  let images = data.images || [];
+  let mainImage = data.mainImage || images[0];
 
-//   const next = () => {
-//     currentIndex = (currentIndex + 1) % data.car.images.length;
-//   };
-
-//   const prev = () => {
-//     currentIndex =
-//       (currentIndex - 1 + data.car.images.length) % data.car.images.length;
-//   };
+  let previewImages = images.slice(1, 5);
+  let remainingImages = Math.max(images.length - 5, 0);
 </script>
-<!-- 
-<div class="container">
-    <a href="/cars">Back</a>
-    <h1>{data.marke}</h1>   
 
-    {#if data.car.images?.length}
-  <div class="gallery">
-    <button on:click={prev}>‹</button>
+<div class="detail-page">
+  <div class="detail-container">
+    <div class="breadcrumb">
+      <a href="/cars">← Back</a>
+      <span>|</span>
+      <span>{data.marke}</span>
+      <span>›</span>
+      <span>{data.modell}</span>
+    </div>
 
-    <img
-      src={data.car.images[currentIndex]}
-      alt={`${data.car.marke} ${data.car.modell}`}
-      class="main-image"
-    />
+    <section class="hero-gallery">
+      <div class="main-photo">
+        <img src={mainImage} alt="{data.marke} {data.modell}" />
+      </div>
 
-    <button on:click={next}>›</button>
+      <div class="side-photos">
+        {#each previewImages as image, index}
+          <div class="thumb">
+            <img src={image} alt="Car image" />
+
+            {#if index === previewImages.length - 1 && remainingImages > 0}
+              <div class="image-overlay">+ {remainingImages} Images</div>
+            {/if}
+          </div>
+        {/each}
+      </div>
+    </section>
+
+    <section class="content-grid">
+      <div class="left-content">
+        <h1>{data.marke} {data.modell}</h1>
+
+        <div class="spec-grid">
+          <div class="spec-item">
+            <span class="icon">📅</span>
+            <span>{data.baujahr}</span>
+          </div>
+
+          <div class="spec-item">
+            <span class="icon">⛽</span>
+            <span>{data.treibstoff || 'Diesel'}</span>
+          </div>
+
+          <div class="spec-item">
+            <span class="icon">🛣️</span>
+            <span>{data.kilometer || '-'} km</span>
+          </div>
+
+          <div class="spec-item">
+            <span class="icon">⚙️</span>
+            <span>{data.leistung} PS</span>
+          </div>
+
+          <div class="spec-item">
+            <span class="icon">🔁</span>
+            <span>{data.getriebe || 'Automatic'}</span>
+          </div>
+
+          <div class="spec-item">
+            <span class="icon">🚚</span>
+            <span>{data.karosserie || 'Box'}</span>
+          </div>
+        </div>
+
+        <a class="show-data" href="#">↓ Show all vehicle data</a>
+
+        <hr />
+
+        <h2>Equipment</h2>
+
+        <div class="info-box">
+          <strong>i</strong>
+          <span>
+            Unfortunately, equipment details are not currently available.
+          </span>
+        </div>
+
+        <h3>Standard equipment</h3>
+        <ul>
+          <li>Automat</li>
+          <li>Airbag Fahrerseite</li>
+          <li>Cupholder vorne</li>
+        </ul>
+      </div>
+
+      <aside class="right-card">
+        <h2>CHF {data.preis}.-</h2>
+
+        <a href="#" class="blue-link">Compare financing options</a>
+        <a href="#" class="blue-link">Calculate insurance premium</a>
+
+        <button class="contact-btn">✉ Contact</button>
+        <button class="phone-btn">☎ 079...show</button>
+
+        <div class="button-row">
+          <button>▦ Compare</button>
+          <button>♡ Save</button>
+        </div>
+
+        <a href="#" class="whatsapp-link">Contact via WhatsApp</a>
+
+        <div class="dealer-box">
+          <strong>CarHub Dealer</strong>
+          <p>⭐ 3.8 ★★★★★</p>
+          <p>📍 Vorbuchenstrasse 13, 8303 Bassersdorf</p>
+          <p>🕘 Show opening hours</p>
+        </div>
+      </aside>
+    </section>
   </div>
+</div>
 
-  <p>{currentIndex + 1} / {data.car.images.length}</p>
-{/if}
-
-    
-    <div>Baujahr: {data.baujahr}</div>
-    <div>Leistung: {data.leistung}</div>
-    <div>Preis: {data.preis}</div>
-    
-    <form method="POST" action="?/delete">
-        <button class="btn btn-danger">Delete Car</button>
-    </form>
-</div> -->
-
-
-<style>
-  .gallery {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .main-image {
-    max-width: 700px;
-    width: 100%;
-    height: 450px;
-    object-fit: cover;
-    border-radius: 12px;
-  }
-
-  button {
-    font-size: 2rem;
-  }
-</style>

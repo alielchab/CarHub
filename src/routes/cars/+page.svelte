@@ -1,9 +1,6 @@
 <script>
     import Car from "$lib/components/Car.svelte";
     let {data} = $props();
-
-
-
 </script>
 
 <div class="garage-page">
