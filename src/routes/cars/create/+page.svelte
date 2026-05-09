@@ -8,6 +8,9 @@
   let selectedModel = $state("");
   let selectedGetriebe = $state("");
   let selectedArt = $state("");
+  let selectedGarantie = $state("");
+  let ps = $state("");
+  let kw = $state("");
 
   async function loadMakes() {
     const res = await fetch(
@@ -34,6 +37,9 @@
     models = data.Results.map((model) => model.Model_Name).sort();
   }
 
+  loadMakes();
+
+  //je nach dem welche Getriebeart ausgewählt wird, werden die entsprechenden Arten angezeigt
   const getriebeArten = {
     Automat: ["Automat", "Stufenlos", "Halbautomatisches Getriebe"],
     Schaltung: ["Schaltgetriebe manuell"],
@@ -43,7 +49,25 @@
     selectedGetriebe ? getriebeArten[selectedGetriebe] : [],
   );
 
-  loadMakes();
+  // Umrechnung PS <-> KW
+  function updateKw() {
+    if (!ps) {
+      kw = "";
+      return;
+    }
+
+    kw = Math.round(Number(ps) * 0.735499);
+  }
+
+  // Umrechnung KW <-> PS
+  function updatePs() {
+    if (!kw) {
+      ps = "";
+      return;
+    }
+
+    ps = Math.round(Number(kw) / 0.735499);
+  }
 </script>
 
 <div class="create-page">
@@ -67,6 +91,7 @@
             <label>Marke *</label>
             <select
               name="marke"
+              required
               bind:value={selectedMake}
               onchange={loadModels}
             >
@@ -82,6 +107,7 @@
             <label>Modell *</label>
             <select
               name="modell"
+              required
               bind:value={selectedModel}
               disabled={!selectedMake}
             >
@@ -97,7 +123,7 @@
 
           <div class="field">
             <label>Getriebe *</label>
-            <select name="getriebe" bind:value={selectedGetriebe}>
+            <select name="getriebe" required bind:value={selectedGetriebe}>
               <option value="">Auswählen</option>
               <option value="Automat">Automat</option>
               <option value="Schaltung">Schaltung</option>
@@ -108,6 +134,7 @@
             <label>Art *</label>
             <select
               name="art"
+              required
               bind:value={selectedArt}
               disabled={!selectedGetriebe}
             >
@@ -123,7 +150,7 @@
             </select>
           </div>
 
-          <div class="field full-width">
+          <div class="field">
             <label>Version</label>
             <input name="version" type="text" />
           </div>
@@ -131,7 +158,7 @@
           <div class="field">
             <label>Aufbau *</label>
 
-            <select name="aufbau">
+            <select name="aufbau" required>
               <option value="">Auswählen</option>
 
               <option value="Bus">Bus</option>
@@ -152,7 +179,7 @@
 
           <div class="field">
             <label>Antrieb</label>
-            <select name="antrieb">
+            <select name="antrieb" required>
               <option>Auswählen</option>
 
               <option value="Bus">Allrad</option>
@@ -161,43 +188,10 @@
             </select>
           </div>
 
-          <div class="field full-width">
-            <label>Fahrzeug Farbe</label>
-            <input name="farbe" type="text" />
-          </div>
-
-          <div class="field">
-            <label>Innenfarbe</label>
-
-            <select name="innenfarbe">
-              <option value="">Auswählen</option>
-
-              <option value="anthrazit">anthrazit</option>
-              <option value="beige">beige</option>
-              <option value="blau">blau</option>
-              <option value="bordeaux">bordeaux</option>
-              <option value="braun">braun</option>
-              <option value="gelb">gelb</option>
-              <option value="gold">gold</option>
-              <option value="grau">grau</option>
-              <option value="grün">grün</option>
-              <option value="mehrfarbig">mehrfarbig</option>
-              <option value="orange">orange</option>
-              <option value="rosa">rosa</option>
-              <option value="rot">rot</option>
-              <option value="schwarz">schwarz</option>
-              <option value="silber">silber</option>
-              <option value="türkis">türkis</option>
-              <option value="violett">violett</option>
-              <option value="weiss">weiss</option>
-              <option value="sonstiges">sonstiges</option>
-            </select>
-          </div>
-
           <div class="field">
             <label>Treibstoff</label>
 
-            <select name="treibstoff">
+            <select name="treibstoff" required>
               <option value="">Treibstoff auswählen</option>
 
               <option value="Benzin">Benzin</option>
@@ -236,6 +230,39 @@
               <option value="Wasserstoff">Wasserstoff</option>
             </select>
           </div>
+
+          <div class="field">
+            <label>Fahrzeug Farbe</label>
+            <input name="farbe" type="text" required />
+          </div>
+
+          <div class="field">
+            <label>Innenfarbe</label>
+
+            <select name="innenfarbe" required>
+              <option value="">Auswählen</option>
+
+              <option value="anthrazit">anthrazit</option>
+              <option value="beige">beige</option>
+              <option value="blau">blau</option>
+              <option value="bordeaux">bordeaux</option>
+              <option value="braun">braun</option>
+              <option value="gelb">gelb</option>
+              <option value="gold">gold</option>
+              <option value="grau">grau</option>
+              <option value="grün">grün</option>
+              <option value="mehrfarbig">mehrfarbig</option>
+              <option value="orange">orange</option>
+              <option value="rosa">rosa</option>
+              <option value="rot">rot</option>
+              <option value="schwarz">schwarz</option>
+              <option value="silber">silber</option>
+              <option value="türkis">türkis</option>
+              <option value="violett">violett</option>
+              <option value="weiss">weiss</option>
+              <option value="sonstiges">sonstiges</option>
+            </select>
+          </div>
         </div>
       </section>
 
@@ -249,7 +276,7 @@
           <div class="field">
             <label>Fahrzeugzustand *</label>
 
-            <select name="zustand">
+            <select name="zustand" required>
               <option value="">Fahrzeugzustand auswählen</option>
 
               <option value="Neues Fahrzeug">Neues Fahrzeug</option>
@@ -269,6 +296,11 @@
           <div class="field">
             <label>Letzte MFK</label>
             <input name="mfk" type="date" />
+
+            <label class="checkbox-field">
+              <input type="checkbox" name="ab_mfk" />
+              Ab MFK
+            </label>
           </div>
 
           <div class="field">
@@ -277,16 +309,81 @@
           </div>
 
           <div class="field">
-            <label>Garantie</label>
-            <select name="garantie">
-              <option>Keine Garantie</option>
-            </select>
-          </div>
-
-          <div class="field">
             <label>Kilometer *</label>
             <input name="kilometer" type="number" />
           </div>
+        </div>
+      </section>
+
+      <section class="form-section">
+        <div class="section-title">
+          <h2>Garantie</h2>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label>Garantie</label>
+
+            <select name="garantie" bind:value={selectedGarantie} required>
+              <option value=""> Garantie auswählen </option>
+
+              <option value="Keine Garantie"> Keine Garantie </option>
+
+              <option value="Ab Übernahme"> Ab Übernahme </option>
+
+              <option value="Ab 1. Inverkehrsetzung">
+                Ab 1. Inverkehrsetzung
+              </option>
+
+              <option value="Ab Datum"> Ab Datum </option>
+            </select>
+          </div>
+
+          {#if selectedGarantie && selectedGarantie !== "Keine Garantie"}
+            <div class="info-box full-width">
+              <strong>Info</strong>
+              <span>
+                Bitte geben Sie entweder die Dauer der Garantie in Monaten oder
+                die maximale Kilometerzahl an. Beide Angaben sind optional, aber
+                mindestens eine davon sollte ausgefüllt werden, um potenziellen
+                Käufern eine klare Vorstellung von den Garantiebedingungen zu
+                vermitteln.
+              </span>
+            </div>
+
+            {#if selectedGarantie === "Ab Datum"}
+              <div class="field full-width">
+                <label>Garantiebeginn</label>
+
+                <input type="date" name="garantie_datum" />
+              </div>
+            {/if}
+
+            {#if selectedGarantie !== "Keine Garantie"}
+              <div class="field">
+                <label>Dauer (Monate) *</label>
+
+                <input type="number" name="garantie_monate" />
+              </div>
+
+              <div class="field">
+                <label>max. KM</label>
+
+                <input type="number" name="garantie_km" />
+              </div>
+
+              <div class="field full-width">
+                <label>Beschreibung der Garantie</label>
+
+                <textarea
+                  name="garantie_beschreibung"
+                  rows="5"
+                  maxlength="100"
+                  placeholder="Beschreibung der Garantie, wie z.B. Herstellergarantie. (Maximal 100 Zeichen)"
+                ></textarea>
+              </div>
+            {/if}
+          {/if}
         </div>
       </section>
 
@@ -305,6 +402,129 @@
           <div class="field">
             <label>Neupreis - CHF</label>
             <input name="neupreis" type="number" />
+          </div>
+        </div>
+      </section>
+
+      <section class="form-section">
+        <div class="section-title">
+          <h2>Technische Daten</h2>
+        </div>
+
+        <div class="section-info">
+          Bitte wählen Sie eine Treibstoffart. Dann können wir Ihnen mehr
+          Informationen anzeigen.
+        </div>
+
+        <div class="technical-grid">
+          <div>
+            <div class="small-grid">
+              <div class="field">
+                <label>Türen</label>
+                <input name="tueren" type="number" />
+              </div>
+
+              <div class="field">
+                <label>Sitze</label>
+                <input name="sitze" type="number" />
+              </div>
+
+              <div class="field">
+                <label>PS</label>
+                <input
+                  name="leistung"
+                  type="number"
+                  bind:value={ps}
+                  oninput={updateKw}
+                />
+              </div>
+
+              <div class="field">
+                <label>KW</label>
+                <input
+                  name="kw"
+                  type="number"
+                  bind:value={kw}
+                  oninput={updatePs}
+                />
+              </div>
+
+              <div class="field full-width">
+                <label>Hubraum</label>
+                <input name="hubraum" type="number" />
+              </div>
+
+              <div class="field full-width">
+                <label>Radstand (mm)</label>
+                <input name="radstand" type="number" />
+              </div>
+
+              <div class="field">
+                <label>Leergewicht (kg)</label>
+                <input name="leergewicht" type="number" />
+              </div>
+
+              <div class="field">
+                <label>Nutzlast (kg)</label>
+                <input name="nutzlast" type="number" />
+              </div>
+
+              <div class="field full-width">
+                <label>Höhe (mm)</label>
+                <input name="hoehe" type="number" />
+              </div>
+
+              <div class="field">
+                <label>Breite (mm)</label>
+                <input name="breite" type="number" />
+              </div>
+
+              <div class="field">
+                <label>Länge (mm)</label>
+                <input name="laenge" type="number" />
+              </div>
+
+              <div class="field full-width">
+                <label>Anhängelast (kg) gebremst</label>
+                <input name="anhaengelast" type="number" />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="field">
+              <label>Energieetikette</label>
+              <select name="energieetikette">
+                <option value="">Energieetikette auswählen</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+                <option value="E">E</option>
+                <option value="F">F</option>
+                <option value="G">G</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Typengenehmigung</label>
+              <input name="typengenehmigung" />
+            </div>
+
+            <div class="field">
+              <label>Fahrgestellnummer</label>
+              <input name="fahrgestellnummer" />
+            </div>
+
+            <div class="field">
+              <label>Stammnummer</label>
+              <input name="stammnummer" />
+            </div>
+
+            <div class="field">
+              <label>Wagen-Nr.</label>
+              <input name="wagen_nr" />
+            </div>
           </div>
         </div>
       </section>
@@ -344,7 +564,15 @@
       <div class="bottom-actions">
         <a href="/cars" class="back-btn">← Zurück</a>
 
-        <button type="submit" class="next-btn"> Create </button>
+        <div class="right-actions">
+          <button type="submit" name="saveAs" value="entwurf" class="draft-btn">
+            Entwurf
+          </button>
+
+          <button type="submit" name="saveAs" value="aktiv" class="create-btn">
+            Create
+          </button>
+        </div>
       </div>
     </form>
   </div>

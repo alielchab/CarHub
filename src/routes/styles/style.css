@@ -538,17 +538,18 @@
   border-radius: 4px;
 }
 
-.next-btn {
+.create-btn {
+  color: white;
   padding: 14px 34px;
-  background: #fff200;
+  background: #036cfd ;
   border: none;
   font-weight: 700;
   border-radius: 4px;
   cursor: pointer;
 }
 
-.next-btn:hover {
-  background: #f0e000;
+.create-btn:hover {
+  background: #0256c9;
 }
 
 @media (max-width: 900px) {
@@ -561,9 +562,303 @@
   }
 }
 
+/* Ab MFK Checkbox*/
+
+.checkbox-field {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+}
+
+.checkbox-field input {
+  width: 18px;
+  height: 18px;
+}
+
+
+/* Styles for Garantie*/
+
+
+.field textarea {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  font-size: 15px;
+  resize: vertical;
+  min-height: 140px;
+  font-family: inherit;
+}
+
+.field textarea:focus {
+  outline: none;
+  border-color: #0067b8;
+}
+
+/* Styles for technische daten section */
+
+.section-info {
+  margin: 0 24px 20px;
+  background: #dceeff;
+  padding: 18px 22px;
+  color: #111;
+  border-left: 4px solid #1683e2;
+}
+
+.technical-grid {
+  padding: 0 24px 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+}
+
+.small-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+@media (max-width: 900px) {
+  .technical-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
 
 
 
+/* Styles for Menu */
+.as-navbar {
+  height: 62px;
+  background: white;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 48px;
+  font-size: 16px;
+  position: relative;
+  z-index: 100;
+}
+
+.as-left,
+.as-right {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.as-navbar a,
+.as-navbar button {
+  color: #111;
+  text-decoration: none;
+  background: none;
+  border: none;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.as-logo {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.as-logo span {
+  background: #fff200;
+  padding: 0 4px;
+  transform: rotate(-4deg);
+  display: inline-block;
+}
+
+.nav-dropdown,
+.user-dropdown {
+  position: relative;
+}
+
+.small-menu {
+  position: absolute;
+  top: 38px;
+  left: 0;
+  background: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  min-width: 170px;
+  padding: 10px 0;
+}
+
+.small-menu a {
+  display: block;
+  padding: 10px 16px;
+  font-weight: 500;
+}
+
+.small-menu a:hover {
+  background: #f5f5f5;
+}
+
+.user-menu {
+  position: absolute;
+  top: 42px;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  min-width: 220px;
+  padding: 12px 0;
+}
+
+.user-menu a,
+.user-menu button {
+  display: block;
+  width: 100%;
+  padding: 12px 18px;
+  text-align: left;
+  font-weight: 500;
+}
+
+.user-menu a:hover,
+.user-menu button:hover {
+  background: #f5f5f5;
+}
+
+.user-menu form {
+  margin: 0;
+}
+
+.user-menu form button {
+  color: red;
+}
 
 
+
+/* Styles for filters page on my cars*/
+.filters-wrapper {
+  margin-top: 40px;
+}
+
+.filters-wrapper h2 {
+  font-size: 28px;
+  margin-bottom: 24px;
+}
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.filters-grid select,
+.filter-btn {
+  height: 58px;
+  border: 1px solid #cfcfcf;
+  background: #f5f5f5;
+  border-radius: 4px;
+  padding: 0 18px;
+  font-size: 17px;
+}
+
+.filter-btn {
+  background: white;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.extra-filters {
+  margin-top: 18px;
+}
+
+.status-bar {
+  margin-top: 26px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.status-left,
+.status-right {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.status-left label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 17px;
+}
+
+.status-left input[type='radio'] {
+  width: 22px;
+  height: 22px;
+}
+
+.reset-btn,
+.sort-btn {
+  background: none;
+  border: none;
+  font-size: 17px;
+  color: #777;
+  cursor: pointer;
+}
+
+.sort-btn {
+  color: #0067b8;
+}
+
+@media (max-width: 1000px) {
+  .filters-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .status-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .status-left,
+  .status-right {
+    flex-wrap: wrap;
+  }
+}
+
+
+
+/**reset button on my cars page**/
+.reset-btn:hover {
+  color: #0067b8;
+}
+
+
+
+/*style for entwurf button*/
+.bottom-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 40px;
+}
+
+.right-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.draft-btn {
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #666;
+}
+
+.draft-btn:hover {
+  color: #111;
+}
 

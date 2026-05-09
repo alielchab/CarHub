@@ -1,62 +1,64 @@
 <script>
-  import favicon from "$lib/assets/favicon.svg";
-  import "./styles/style.css";
+  import favicon from '$lib/assets/favicon.svg';
+  import './styles/style.css';
 
   let { children, data } = $props();
+
+  let userOpen = $state(false);
+  let inventorsOpen = $state(false);
 </script>
 
 <svelte:head>
   <link rel="icon" href={favicon} />
 </svelte:head>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="/"
-    ><img
-      src="/images/logo/carhub_logo_transparent.png"
-      alt="CarHub Logo"
-      class="logo"
-      width="150"
-      height="100"
-    /></a
-  >
-  <button
-    class="navbar-toggler"
-    type="button"
-    data-toggle="collapse"
-    data-target="#navbarNavDropdown"
-    aria-controls="navbarNavDropdown"
-    aria-expanded="false"
-    aria-label="Toggle navigation"
-  >
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNavDropdown">
-    <ul class="navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link" href="/">Home</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/search">Search</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/toplisting">Top Listing</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/allcars">All Cars</a>
-      </li>
-      {#if data.user}
-        <li class="nav-item">
-          <a class="nav-link" href="/cars">My Cars</a>
-        </li>
-        <form method="POST" action="/logout" style="display:inline;">
-          <button type="submit">Logout</button>
-        </form>
-      {:else}
-        <li class="nav-item">
-          <a class="nav-link" href="/login">Login</a>
-        </li>
+<nav class="as-navbar">
+  <div class="as-left">
+    <a href="/" class="as-logo">
+      <img src="images/logo/carhub_logo_transparent.png" alt="Logo" width="75" height="75" />
+     
+    </a>
+
+    <a href="/">Home</a>
+    <a href="/search">Search</a>
+
+    <div class="nav-dropdown">
+      <button type="button" onclick={() => inventorsOpen = !inventorsOpen}>
+        Inventors ▾
+      </button>
+
+      {#if inventorsOpen}
+        <div class="small-menu">
+          <a href="/inventor">All Inventors</a>
+          <a href="/inventor-b">Inventor B</a>
+          <a href="/inventor-d">Inventor D</a>
+        </div>
       {/if}
-    </ul>
+    </div>
+
+    <a href="/top-listing">Top Listing</a>
+  </div>
+
+  <div class="as-right">
+    {#if data.user}
+      <div class="user-dropdown">
+        <button type="button" onclick={() => userOpen = !userOpen}>
+          ◎ {data.user.username || 'User'} ▾
+        </button>
+
+        {#if userOpen}
+          <div class="user-menu">
+            <a href="/cars">Meine Fahrzeuge</a>
+
+            <form method="POST" action="/logout">
+              <button type="submit">Abmelden</button>
+            </form>
+          </div>
+        {/if}
+      </div>
+    {:else}
+      <a href="/login">Login</a>
+    {/if}
   </div>
 </nav>
 

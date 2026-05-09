@@ -21,6 +21,7 @@
                 <a href={"cars/" + car._id}>Top Listing</a>
                 <a href={"cars/" + car._id}>View vehicle</a>
                 <a href={"cars/" + car._id + "/edit"}>Edit data</a>
+                <a href={"cars/" + car._id}>Sold</a>
 
                 <form method="POST" action="?/delete">
                     <input type="hidden" name="id" value={car._id} />

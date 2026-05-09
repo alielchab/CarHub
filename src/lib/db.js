@@ -1,5 +1,6 @@
 import { MongoClient, ObjectId} from "mongodb";
 import { DB_URI, DB_NAME } from "$env/static/private";
+import { get } from "node:http";
 
 const client = new MongoClient(DB_URI);
 
@@ -58,26 +59,35 @@ async function createCar(car) {
   return null;
 }
 
-
 async function updateCar(car) {
   try {
+
     let id = car._id;
-    delete car._id; // delete the _id from the object, because the _id cannot be updated
+
+    delete car._id;
+
     const collection = db.collection("cars");
-    const query = { _id: new ObjectId(id) }; // filter by id
-    const result = await collection.updateOne(query, { $set: car });
+
+    const query = {
+      _id: new ObjectId(id)
+    };
+
+    const result = await collection.updateOne(
+      query,
+      { $set: car }
+    );
 
     if (result.matchedCount === 0) {
       console.log("No car with id " + id);
-      // TODO: errorhandling
     } else {
-      console.log("Car with id " + id + " has been updated.");
+      console.log("Car updated");
       return id;
     }
+
   } catch (error) {
-    // TODO: errorhandling
     console.log(error.message);
   }
+
   return null;
 }
 
@@ -105,13 +115,27 @@ async function deleteCar(id) {
 
 
 
+
+
+async function getUserById(id) {
+  try {
+    const collection = db.collection('users');
+    return await collection.findOne({ _id: new ObjectId(id) });
+  } catch (error) {
+    console.log(error.message);
+  }
+
+  return null;
+}
+
 async function getUserByUsername(username) {
   try {
-    const collection = db.collection("users");
+    const collection = db.collection('users');
     return await collection.findOne({ username });
   } catch (error) {
     console.log(error.message);
   }
+
   return null;
 }
 
@@ -122,10 +146,11 @@ async function getUserByUsername(username) {
 export default {
   getCars,
   getCar,
-createCar,
-updateCar,
-deleteCar,  
-getUserByUsername
+  createCar,
+  updateCar,
+  deleteCar,  
+  getUserByUsername,
+  getUserById
 };
 
 
