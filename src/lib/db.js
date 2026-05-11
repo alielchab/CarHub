@@ -1,5 +1,5 @@
 import { MongoClient, ObjectId} from "mongodb";
-import { DB_URI, DB_NAME } from "$env/static/private";
+import { DB_URI} from "$env/static/private";
 import { get } from "node:http";
 
 const client = new MongoClient(DB_URI);
