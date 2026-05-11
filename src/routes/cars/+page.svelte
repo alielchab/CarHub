@@ -11,6 +11,7 @@
   let selectedFarbe = $state("");
   let selectedGetriebe = $state("");
   let selectedAntrieb = $state("");
+  let selectedStatus = $state("aktiv");
 
   function countValues(cars, field) {
     const counts = {};
@@ -26,25 +27,35 @@
     return Object.entries(counts).sort((a, b) => a[0].localeCompare(b[0]));
   }
 
-  let marken = $derived(countValues(data.cars, "marke"));
-  let treibstoffe = $derived(countValues(data.cars, "treibstoff"));
-  let zustaende = $derived(countValues(data.cars, "zustand"));
-  let aufbauten = $derived(countValues(data.cars, "aufbau"));
-  let farben = $derived(countValues(data.cars, "farbe"));
-  let getriebe = $derived(countValues(data.cars, "getriebe"));
-  let antriebe = $derived(countValues(data.cars, "antrieb"));
+  let carsByStatus = $derived(
+    data.cars.filter((car) => {
+      if (selectedStatus === "toplisting") {
+        return car.status === "aktiv" && car.topListing === true;
+      }
+
+      return car.status === selectedStatus;
+    }),
+  );
+
+  let marken = $derived(countValues(carsByStatus, "marke"));
+  let treibstoffe = $derived(countValues(carsByStatus, "treibstoff"));
+  let zustaende = $derived(countValues(carsByStatus, "zustand"));
+  let aufbauten = $derived(countValues(carsByStatus, "aufbau"));
+  let farben = $derived(countValues(carsByStatus, "farbe"));
+  let getriebe = $derived(countValues(carsByStatus, "getriebe"));
+  let antriebe = $derived(countValues(carsByStatus, "antrieb"));
 
   let modelle = $derived(
     countValues(
       selectedMarke
-        ? data.cars.filter((car) => car.marke === selectedMarke)
+        ? carsByStatus.filter((car) => car.marke === selectedMarke)
         : [],
       "modell",
     ),
   );
 
   let filteredCars = $derived(
-    data.cars.filter((car) => {
+    carsByStatus.filter((car) => {
       return (
         (!selectedMarke || car.marke === selectedMarke) &&
         (!selectedModell || car.modell === selectedModell) &&
@@ -84,22 +95,31 @@
   let removedCount = $derived(
     data.cars.filter((car) => car.status === "entfernt").length,
   );
+
+  let toplisting = $derived(
+    data.cars.filter((car) => car.status === "aktiv" && car.topListing === true)
+      .length,
+  );
+
+  let sold = $derived(
+    data.cars.filter((car) => car.status === "verkauft").length,
+  );
 </script>
 
 <div class="garage-page">
   <div class="garage-card">
     <div class="garage-header">
       <div>
-        <h1>Manage vehicles</h1>
-        <p>Overview of all vehicles in your virtual garage.</p>
+        <h1>Meine Fahrzeuge verwalten</h1>
+        <p>Übersicht aller Fahrzeuge in Ihrer virtuellen Garage.</p>
       </div>
 
-      <a href="/cars/create" class="add-btn">+ Add new vehicle</a>
+      <a href="/cars/create" class="add-btn">+ Neues Fahrzeug hinzufügen</a>
     </div>
 
     <div class="info-box">
       <strong>Info</strong>
-      <span>Manage your vehicles here.</span>
+      <span>Verwalten Sie hier Ihre Fahrzeuge.</span>
     </div>
 
     <div class="filters-wrapper">
@@ -188,23 +208,37 @@
           <strong>Status:</strong>
 
           <label>
-            <input type="radio" name="status" checked />
+            <input type="radio" bind:group={selectedStatus} value="aktiv" />
             Aktiv ({activeCount})
           </label>
 
           <label>
-            <input type="radio" name="status" />
+            <input type="radio" bind:group={selectedStatus} value="inaktiv" />
             Inaktiv ({inactiveCount})
           </label>
 
           <label>
-            <input type="radio" name="status" />
+            <input type="radio" bind:group={selectedStatus} value="entwurf" />
             Entwurf ({draftCount})
           </label>
 
           <label>
-            <input type="radio" name="status" />
+            <input
+              type="radio"
+              bind:group={selectedStatus}
+              value="toplisting"
+            />
+            Top Listing ({toplisting})
+          </label>
+
+          <label>
+            <input type="radio" bind:group={selectedStatus} value="entfernt" />
             Entfernt ({removedCount})
+          </label>
+
+          <label>
+            <input type="radio" bind:group={selectedStatus} value="verkauft" />
+            Verkauft ({sold})
           </label>
         </div>
 

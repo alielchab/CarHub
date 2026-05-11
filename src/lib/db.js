@@ -7,8 +7,7 @@ const client = new MongoClient(DB_URI);
 await client.connect();
 const db = client.db("carhub");
 
-
-
+// Get all cars
 async function getCars() {
     let cars = [];
     try {
@@ -24,7 +23,6 @@ async function getCars() {
     }
     return cars;
 }   
-
 
 // Get car by id
 async function getCar(id) {
@@ -47,6 +45,7 @@ async function getCar(id) {
   return car;
 }
 
+// Create new car
 async function createCar(car) { 
   try {
     const collection = db.collection("cars");
@@ -59,6 +58,7 @@ async function createCar(car) {
   return null;
 }
 
+// Update existing car
 async function updateCar(car) {
   try {
 
@@ -91,7 +91,7 @@ async function updateCar(car) {
   return null;
 }
 
-
+// Delete car by id
 async function deleteCar(id) {
   try {
     const collection = db.collection("cars");
@@ -111,12 +111,51 @@ async function deleteCar(id) {
   return null;
 }
 
+// Update car status (aktiv, inaktiv, verkauft, entfernt)
+async function updateCarStatus(id, status) {
+  try {
+    const collection = db.collection('cars');
 
+    const update = {
+      status
+    };
 
+    if (status !== 'aktiv') {
+      update.topListing = false;
+    }
 
+    await collection.updateOne(
+      { _id: new ObjectId(id) },
+      { $set: update }
+    );
 
+    return id;
+  } catch (error) {
+    console.log(error.message);
+  }
 
+  return null;
+}
 
+// Update top listing status
+async function updateTopListing(id, value) {
+  try {
+    const collection = db.collection('cars');
+
+    await collection.updateOne(
+      { _id: new ObjectId(id) },
+      { $set: { topListing: value } }
+    );
+
+    return id;
+  } catch (error) {
+    console.log(error.message);
+  }
+
+  return null;
+}
+
+// Get user by id
 async function getUserById(id) {
   try {
     const collection = db.collection('users');
@@ -128,6 +167,7 @@ async function getUserById(id) {
   return null;
 }
 
+// Get user by username
 async function getUserByUsername(username) {
   try {
     const collection = db.collection('users');
@@ -139,9 +179,6 @@ async function getUserByUsername(username) {
   return null;
 }
 
-
-
-
 // export all functions so that they can be used in other files
 export default {
   getCars,
@@ -150,7 +187,7 @@ export default {
   updateCar,
   deleteCar,  
   getUserByUsername,
-  getUserById
+  getUserById, 
+  updateCarStatus,
+  updateTopListing
 };
-
-

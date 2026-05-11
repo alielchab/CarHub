@@ -1,5 +1,8 @@
 import db from '$lib/db.js';
 import { redirect, fail } from '@sveltejs/kit';
+import { writeFile, mkdir } from 'fs/promises';
+import path from 'path';
+import crypto from 'crypto';
 
 export async function load({ params, locals }) {
   if (!locals.user) {
@@ -20,6 +23,44 @@ export const actions = {
     }
 
     const data = await request.formData();
+    let existingImages = [];
+
+    try {
+      existingImages = JSON.parse(data.get('existingImages') || '[]');
+    } catch {
+      existingImages = [];
+    }
+
+    const files = data
+      .getAll('images')
+      .filter((file) => file && file.name && file.size > 0);
+
+    if (existingImages.length + files.length > 30) {
+      return fail(400, { error: 'Maximal 30 Bilder erlaubt' });
+    }
+
+    const newImagePaths = [];
+
+    await mkdir('static/images/uploads/cars', { recursive: true });
+
+    for (const file of files) {
+      if (!file.type.startsWith('image/')) {
+        return fail(400, { error: 'Es sind nur Bilder erlaubt' });
+      }
+
+      const extension = path.extname(file.name);
+      const filename = `${crypto.randomUUID()}${extension}`;
+
+      const savePath = `static/images/uploads/cars/${filename}`;
+      const publicPath = `/images/uploads/cars/${filename}`;
+
+      const buffer = Buffer.from(await file.arrayBuffer());
+      await writeFile(savePath, buffer);
+
+      newImagePaths.push(publicPath);
+    }
+
+    const imagePaths = [...existingImages, ...newImagePaths];
 
     const car = {
       _id: params.cars_id,
@@ -38,8 +79,7 @@ export const actions = {
       zustand: data.get('zustand'),
       mfk: data.get('mfk'),
       ab_mfk: data.get('ab_mfk') ? true : false,
-      monat: data.get('monat'),
-      jahr: data.get('jahr'),
+      inverkehrssetzung: data.get('inverkehrssetzung'),
       kilometer: data.get('kilometer'),
 
       garantie: data.get('garantie'),
@@ -69,6 +109,11 @@ export const actions = {
       fahrgestellnummer: data.get('fahrgestellnummer'),
       stammnummer: data.get('stammnummer'),
       wagen_nr: data.get('wagen_nr'),
+
+      images: imagePaths,
+      mainImage: imagePaths[0] ?? null,
+
+      inventor: data.get('inventor'),
 
       updatedAt: new Date()
     };

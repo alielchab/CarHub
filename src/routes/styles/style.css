@@ -356,7 +356,8 @@
   width: 100%;
   margin-top: 20px;
   padding: 18px;
-  background: #fff200;
+  background: #0067b8;
+  color: white;
   border: 1px solid #d6ca00;
   font-size: 18px;
   font-weight: 700;
@@ -862,3 +863,207 @@
   color: #111;
 }
 
+/* Styles for Bilder Section in create/ edit pages */
+.image-upload-box {
+  padding: 24px;
+}
+
+.upload-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.upload-header p {
+  margin: 6px 0 0;
+  color: #666;
+}
+
+.upload-btn {
+  background: #0067ff;
+  color: white;
+  padding: 14px 22px;
+  border-radius: 4px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.disabled-upload {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.image-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 18px;
+}
+
+.image-preview-card {
+  position: relative;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+  background: white;
+}
+
+.image-preview-card img {
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+  display: block;
+}
+
+.main-image-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: #0067b8;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 3px;
+  z-index: 2;
+}
+
+.image-actions {
+  display: flex;
+  gap: 6px;
+  padding: 10px;
+  flex-wrap: wrap;
+}
+
+.image-actions button {
+  border: 1px solid #ccc;
+  background: white;
+  padding: 6px 10px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.image-actions button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.remove-image-btn {
+  color: #c40000;
+}
+
+.empty-upload {
+  border: 2px dashed #ccc;
+  padding: 40px;
+  text-align: center;
+  color: #777;
+  border-radius: 6px;
+}
+
+
+
+/* Styles for succes Page */
+.success-page {
+  min-height: calc(100vh - 62px);
+  background: #ededed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.success-card {
+  background: white;
+  width: 100%;
+  max-width: 520px;
+  padding: 48px;
+  border-radius: 6px;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.success-icon {
+  width: 72px;
+  height: 72px;
+  background: #0067b8;
+  border-radius: 50%;
+  margin: 0 auto 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 42px;
+  font-weight: 800;
+}
+
+.success-card h1 {
+  margin: 0;
+  font-size: 32px;
+}
+
+.success-card p {
+  margin: 14px 0 32px;
+  color: #555;
+  font-size: 17px;
+}
+
+.success-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+}
+
+.primary-btn,
+.secondary-btn {
+  padding: 14px 22px;
+  border-radius: 4px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.primary-btn {
+  background: #0067ff;
+  color: white;
+}
+
+.secondary-btn {
+  background: white;
+  color: #111;
+  border: 1px solid #ccc;
+}
+
+
+/* Styles for action Page */
+.car-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.car-actions form {
+  margin: 0;
+}
+
+.car-actions button,
+.car-actions a {
+  height: 34px;
+  padding: 0 14px;
+  border: 1px solid #dcdcdc;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  color: #111;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.car-actions button:hover,
+.car-actions a:hover {
+  border-color: #0067ff;
+}
+
+.danger-btn {
+  color: #c40000;
+  border-color: #c40000;
+}

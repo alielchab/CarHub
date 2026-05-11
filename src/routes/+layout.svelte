@@ -4,6 +4,7 @@
 
   let { children, data } = $props();
 
+  // State for dropdown menus
   let userOpen = $state(false);
   let inventorsOpen = $state(false);
 </script>
@@ -20,7 +21,7 @@
     </a>
 
     <a href="/">Home</a>
-    <a href="/search">Search</a>
+    <!-- <a href="/search">Search</a> -->
 
     <div class="nav-dropdown">
       <button type="button" onclick={() => inventorsOpen = !inventorsOpen}>
@@ -29,21 +30,21 @@
 
       {#if inventorsOpen}
         <div class="small-menu">
-          <a href="/inventor">All Inventors</a>
-          <a href="/inventor-b">Inventor B</a>
-          <a href="/inventor-d">Inventor D</a>
+          <a href="/allinventor">All Inventors</a>
+          <a href="/inventorA">Inventor A</a>
+          <a href="/inventorB">Inventor B</a>
         </div>
       {/if}
     </div>
 
-    <a href="/top-listing">Top Listing</a>
+    <a href="/toplisting">Top Listing</a>
   </div>
 
   <div class="as-right">
     {#if data.user}
       <div class="user-dropdown">
         <button type="button" onclick={() => userOpen = !userOpen}>
-          ◎ {data.user.username || 'User'} ▾
+          {data.user.username || 'User'} ▾
         </button>
 
         {#if userOpen}

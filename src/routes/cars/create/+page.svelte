@@ -12,6 +12,11 @@
   let ps = $state("");
   let kw = $state("");
 
+  let imageInput;
+  let selectedImages = $state([]);
+  const maxImages = 30;
+  let remainingImages = $derived(maxImages - selectedImages.length);
+
   async function loadMakes() {
     const res = await fetch(
       "https://vpic.nhtsa.dot.gov/api/vehicles/GetAllMakes?format=json",
@@ -67,6 +72,65 @@
     }
 
     ps = Math.round(Number(kw) / 0.735499);
+  }
+
+  //Image Section - Vorschau der ausgewählten Bilder und Begrenzung auf max. 30 Bilder
+  function handleImageChange(event) {
+    const files = Array.from(event.target.files);
+
+    const availableSlots = maxImages - selectedImages.length;
+    const filesToAdd = files.slice(0, availableSlots);
+
+    const newImages = filesToAdd.map((file) => {
+      return {
+        file,
+        preview: URL.createObjectURL(file),
+      };
+    });
+
+    selectedImages = [...selectedImages, ...newImages];
+
+    updateFileInput();
+  }
+
+  function removeImage(index) {
+    URL.revokeObjectURL(selectedImages[index].preview);
+
+    selectedImages = selectedImages.filter((_, i) => i !== index);
+
+    updateFileInput();
+  }
+
+  function moveImageLeft(index) {
+    if (index === 0) return;
+
+    const copy = [...selectedImages];
+    [copy[index - 1], copy[index]] = [copy[index], copy[index - 1]];
+
+    selectedImages = copy;
+
+    updateFileInput();
+  }
+
+  function moveImageRight(index) {
+    if (index === selectedImages.length - 1) return;
+
+    const copy = [...selectedImages];
+    [copy[index], copy[index + 1]] = [copy[index + 1], copy[index]];
+
+    selectedImages = copy;
+
+    updateFileInput();
+  }
+
+  function updateFileInput() {
+    const dataTransfer = new DataTransfer();
+
+    for (const image of selectedImages) {
+      dataTransfer.items.add(image.file);
+    }
+
+    imageInput.files = dataTransfer.files;
   }
 </script>
 
@@ -554,11 +618,92 @@
           <h2>Bilder</h2>
         </div>
 
-        <div class="field">
-          <label>Fahrzeugbilder</label>
+        <div class="image-upload-box">
+          <div class="upload-header">
+            <div>
+              <strong>Fahrzeugbilder</strong>
+              <p>{remainingImages} Bilder verfügbar</p>
+            </div>
 
-          <input name="images" type="file" accept="image/*" multiple />
+            <label
+              class:disabled-upload={remainingImages === 0}
+              class="upload-btn"
+            >
+              + Bilder hinzufügen
+
+              <input
+                bind:this={imageInput}
+                name="images"
+                type="file"
+                accept="image/*"
+                multiple
+                disabled={remainingImages === 0}
+                onchange={handleImageChange}
+                hidden
+              />
+            </label>
+          </div>
+
+          {#if selectedImages.length > 0}
+            <div class="image-preview-grid">
+              {#each selectedImages as image, index}
+                <div class="image-preview-card">
+                  {#if index === 0}
+                    <span class="main-image-badge">Hauptbild</span>
+                  {/if}
+
+                  <img src={image.preview} alt="Preview" />
+
+                  <div class="image-actions">
+                    <button
+                      type="button"
+                      onclick={() => moveImageLeft(index)}
+                      disabled={index === 0}
+                    >
+                      ←
+                    </button>
+
+                    <button
+                      type="button"
+                      onclick={() => moveImageRight(index)}
+                      disabled={index === selectedImages.length - 1}
+                    >
+                      →
+                    </button>
+
+                    <button
+                      type="button"
+                      class="remove-image-btn"
+                      onclick={() => removeImage(index)}
+                    >
+                      Entfernen
+                    </button>
+                  </div>
+                </div>
+              {/each}
+            </div>
+          {:else}
+            <div class="empty-upload">Noch keine Bilder ausgewählt.</div>
+          {/if}
         </div>
+      </section>
+
+      <section class="form-section">
+        <div class="section-title">
+          <h2>In welchen Inventor speichern</h2>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label>Inventor</label>
+              <select name="inventor" required>
+              <option value="">Inventor auswählen</option>
+              <option value="Inventor A">Inventor A</option>
+              <option value="Inventor B">Inventor B</option>
+            </select>
+          </div>
+
+         </div>
       </section>
 
       <div class="bottom-actions">

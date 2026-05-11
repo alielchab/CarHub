@@ -11,13 +11,14 @@ export async function load({ locals }) {
     }
 }
 
-const saveAs = data.get('saveAs');
 
 export const actions = {
     create: async ({ request }) => {
 
 
         const data = await request.formData();
+
+        const saveAs = data.get('saveAs');
 
         const files = data
             .getAll('images')
@@ -50,6 +51,7 @@ export const actions = {
 
         const car = {
             status: saveAs === 'entwurf' ? 'entwurf' : 'aktiv',
+            topListing: false,
             // Fahrzeug-Merkmale
             marke: data.get('marke'),
             modell: data.get('modell'),
@@ -66,10 +68,7 @@ export const actions = {
             zustand: data.get('zustand'),
             mfk: data.get('mfk'),
             ab_mfk: data.get('ab_mfk') ? true : false,
-
-            monat: data.get('monat'),
-            jahr: data.get('jahr'),
-
+            inverkehrsetzung: data.get('inverkehrsetzung'),
             kilometer: data.get('kilometer'),
 
             // Garantie
@@ -119,6 +118,8 @@ export const actions = {
             // Bilder
             images: imagePaths,
             mainImage: imagePaths[0] ?? null,
+
+            inventor: data.get('inventor'),
 
             createdAt: new Date()
            
