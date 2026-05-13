@@ -125,7 +125,10 @@ export const actions = {
            
         };
 
-        await db.createCar(car);
+        let result = await db.createCar(car);
+        if(result !== null) {
+            return {result: result}
+        }
 
         throw redirect(303, '/success');
     }

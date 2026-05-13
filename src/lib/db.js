@@ -52,8 +52,9 @@ async function createCar(car) {
     const result = await collection.insertOne(car);
     return result.insertedId.toString(); // convert ObjectId to String
   } catch (error) {
-    // TODO: errorhandling
+   
     console.log(error.message);
+    return error;
   }
   return null;
 }

@@ -722,3 +722,7 @@
     </form>
   </div>
 </div>
+
+{#if form?.result}
+  {form.result.message}
+{/if}
