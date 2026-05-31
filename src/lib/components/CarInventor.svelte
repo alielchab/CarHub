@@ -2,26 +2,25 @@
     let { car } = $props();
 </script>
 
-<div class="car-row">
-    
+<div class="car-card">
+  <img class="car-img" src={car.mainImage} alt={car.marke} />
 
-    <div class="car-main">
-        <img src={car.mainImage} alt={car.marke} width="100" height="100" />
+  <div class="car-info">
+    <h2>{car.marke} {car.modell} {car.version}</h2>
 
-        <div>
-            <span class="badge">1 DAY</span>
+    <div class="car-grid">
+      <p>⚡ {car.kw || "-"} KW</p>
+      <p>🛣️ {car.kilometer} km</p>
+      <p>⚙️ {car.antrieb}</p>
 
-            <h3>{car.marke} {car.modell}</h3>
-
-            
-          
-        </div>
+      <p>📅 {car.inverkehrsetzung}</p>
+      <p>⛽ {car.treibstoff}</p>
+      <p>🔘 {car.getriebe}</p>
     </div>
 
-    <div>{car.inverkehrsetzung}</div>
-    <div>{car.preis}.-</div>
-    <div>{car.kilometer || "-"}</div>
-    <div>{car.views || "-"}</div>
+    <p class="label">Preis</p>
+    <p class="price">CHF {car.preis}.-</p>
 
-    
+    <a class="details" href={`/cars/${car._id}`}>DETAILS</a>
+  </div>
 </div>

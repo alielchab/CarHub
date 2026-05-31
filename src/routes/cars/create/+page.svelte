@@ -1,5 +1,17 @@
 <script>
+  import { tick } from "svelte";
+  import {
+    PUBLIC_CLOUDINARY_CLOUD_NAME,
+    PUBLIC_CLOUDINARY_UPLOAD_PRESET,
+  } from "$env/static/public";
+
   let { form } = $props();
+
+  let formElement;
+  let isSubmittingAfterUpload = $state(false);
+  let clickedSaveAs = $state("aktiv");
+  let uploadError = $state("");
+  let isUploadingImages = $state(false);
 
   let makes = $state([]);
   let models = $state([]);
@@ -14,7 +26,7 @@
 
   let imageInput;
   let selectedImages = $state([]);
-  const maxImages = 30;
+  const maxImages = 5;
   let remainingImages = $derived(maxImages - selectedImages.length);
 
   async function loadMakes() {
@@ -74,7 +86,73 @@
     ps = Math.round(Number(kw) / 0.735499);
   }
 
+  async function uploadImageToCloudinary(file) {
+    const uploadData = new FormData();
+
+    uploadData.append("file", file);
+    uploadData.append("upload_preset", PUBLIC_CLOUDINARY_UPLOAD_PRESET);
+
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/${PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+      {
+        method: "POST",
+        body: uploadData,
+      },
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Cloudinary error:", errorText);
+      throw new Error("Cloudinary Upload fehlgeschlagen");
+    }
+
+    const result = await response.json();
+
+    return {
+      url: result.secure_url,
+      publicId: result.public_id,
+    };
+  }
+
+  async function handleSubmit(event) {
+    if (isSubmittingAfterUpload) {
+      return;
+    }
+
+    event.preventDefault();
+
+    uploadError = "";
+    isUploadingImages = true;
+
+    try {
+      for (const image of selectedImages) {
+        if (!image.url) {
+          const uploaded = await uploadImageToCloudinary(image.file);
+
+          image.url = uploaded.url;
+          image.publicId = uploaded.publicId;
+        }
+      }
+
+      selectedImages = [...selectedImages];
+
+      await tick();
+
+      isSubmittingAfterUpload = true;
+      formElement.requestSubmit();
+    } catch (error) {
+      console.error(error);
+      uploadError = "Bilder konnten nicht hochgeladen werden.";
+      alert("Bilder konnten nicht hochgeladen werden.");
+    } finally {
+      isUploadingImages = false;
+    }
+  }
+
   //Image Section - Vorschau der ausgewählten Bilder und Begrenzung auf max. 30 Bilder
+  const maxFileSize = 1.5 * 1024 * 1024; // 1.5 MB pro Bild
+  const maxTotalSize = 4 * 1024 * 1024; // 4 MB total
+
   function handleImageChange(event) {
     const files = Array.from(event.target.files);
 
@@ -85,6 +163,8 @@
       return {
         file,
         preview: URL.createObjectURL(file),
+        url: null,
+        publicId: null,
       };
     });
 
@@ -94,7 +174,11 @@
   }
 
   function removeImage(index) {
-    URL.revokeObjectURL(selectedImages[index].preview);
+    const image = selectedImages[index];
+
+    if (image.preview) {
+      URL.revokeObjectURL(image.preview);
+    }
 
     selectedImages = selectedImages.filter((_, i) => i !== index);
 
@@ -124,13 +208,9 @@
   }
 
   function updateFileInput() {
-    const dataTransfer = new DataTransfer();
+    if (!imageInput) return;
 
-    for (const image of selectedImages) {
-      dataTransfer.items.add(image.file);
-    }
-
-    imageInput.files = dataTransfer.files;
+    imageInput.value = "";
   }
 </script>
 
@@ -143,7 +223,27 @@
       </p>
     </div>
 
-    <form method="POST" action="?/create" enctype="multipart/form-data">
+    <form
+      bind:this={formElement}
+      method="POST"
+      action="?/create"
+      onsubmit={handleSubmit}
+    >
+      <input type="hidden" name="saveAs" value={clickedSaveAs} />
+
+      {#each selectedImages as image}
+        {#if image.url}
+          <input type="hidden" name="imageUrls" value={image.url} />
+        {/if}
+      {/each}
+
+      {#if uploadError}
+        <p class="error-message">{uploadError}</p>
+      {/if}
+
+      {#if isUploadingImages}
+        <p>Bilder werden hochgeladen...</p>
+      {/if}
       <!-- Fahrzeug Merkmale -->
       <section class="form-section">
         <div class="section-title">
@@ -633,7 +733,6 @@
 
               <input
                 bind:this={imageInput}
-                name="images"
                 type="file"
                 accept="image/*"
                 multiple
@@ -696,25 +795,34 @@
         <div class="form-grid">
           <div class="field">
             <label>Inventor</label>
-              <select name="inventor" required>
+            <select name="inventor" required>
               <option value="">Inventor auswählen</option>
               <option value="Inventor A">Inventor A</option>
               <option value="Inventor B">Inventor B</option>
             </select>
           </div>
-
-         </div>
+        </div>
       </section>
 
       <div class="bottom-actions">
         <a href="/cars" class="back-btn">← Zurück</a>
 
         <div class="right-actions">
-          <button type="submit" name="saveAs" value="entwurf" class="draft-btn">
+          <button
+            type="submit"
+            onclick={() => (clickedSaveAs = "entwurf")}
+            class="draft-btn"
+            disabled={isUploadingImages}
+          >
             Entwurf
           </button>
 
-          <button type="submit" name="saveAs" value="aktiv" class="create-btn">
+          <button
+            type="submit"
+            onclick={() => (clickedSaveAs = "aktiv")}
+            class="create-btn"
+            disabled={isUploadingImages}
+          >
             Create
           </button>
         </div>
@@ -723,6 +831,6 @@
   </div>
 </div>
 
-{#if form?.result}
+<!-- {#if form?.result}
   {form.result.message}
-{/if}
+{/if} -->

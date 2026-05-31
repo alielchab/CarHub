@@ -1,6 +1,5 @@
 import { MongoClient, ObjectId} from "mongodb";
 import { DB_URI} from "$env/static/private";
-import { get } from "node:http";
 
 const client = new MongoClient(DB_URI);
 
@@ -50,7 +49,7 @@ async function createCar(car) {
   try {
     const collection = db.collection("cars");
     const result = await collection.insertOne(car);
-    return result.insertedId.toString(); // convert ObjectId to String
+    return result.insertedId.toString();
   } catch (error) {
    
     console.log(error.message);

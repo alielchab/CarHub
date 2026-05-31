@@ -4,9 +4,7 @@
 
   let { children, data } = $props();
 
-  // State for dropdown menus
-  let userOpen = $state(false);
-  let inventorsOpen = $state(false);
+
 </script>
 
 <svelte:head>
@@ -23,44 +21,38 @@
     <a href="/">Home</a>
     <!-- <a href="/search">Search</a> -->
 
-    <div class="nav-dropdown">
-      <button type="button" onclick={() => inventorsOpen = !inventorsOpen}>
-        Inventors ▾
-      </button>
+   <div class="dropdown">
+    <button>Alle Fahrzeuge ▼</button>
 
-      {#if inventorsOpen}
-        <div class="small-menu">
-          <a href="/allinventor">All Inventors</a>
-          <a href="/inventorA">Inventor A</a>
-          <a href="/inventorB">Inventor B</a>
-        </div>
-      {/if}
+    <div class="dropdown-content">
+        <a href="/allinventor">Alle Fahrzeuge</a>
+        <a href="/inventor/a">Fahrzeuge A</a>
+        <a href="/inventor/b">Fahrzeuge B</a>
     </div>
+</div>
 
     <a href="/toplisting">Top Listing</a>
   </div>
 
-  <div class="as-right">
-    {#if data.user}
-      <div class="user-dropdown">
-        <button type="button" onclick={() => userOpen = !userOpen}>
-          {data.user.username || 'User'} ▾
-        </button>
+<div class="as-right">
+  {#if data.user}
+    <div class="user-dropdown">
+      <button type="button">
+        {data.user.username || 'User'} ▾
+      </button>
 
-        {#if userOpen}
-          <div class="user-menu">
-            <a href="/cars">Meine Fahrzeuge</a>
+      <div class="user-menu">
+        <a href="/cars">Meine Fahrzeuge</a>
 
-            <form method="POST" action="/logout">
-              <button type="submit">Abmelden</button>
-            </form>
-          </div>
-        {/if}
+        <form method="POST" action="/logout">
+          <button type="submit">Abmelden</button>
+        </form>
       </div>
-    {:else}
-      <a href="/login">Login</a>
-    {/if}
-  </div>
+    </div>
+  {:else}
+    <a href="/login">Login</a>
+  {/if}
+</div>
 </nav>
 
 {@render children()}

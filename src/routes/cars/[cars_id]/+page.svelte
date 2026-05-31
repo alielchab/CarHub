@@ -11,7 +11,7 @@
 <div class="detail-page">
   <div class="detail-container">
     <div class="breadcrumb">
-      <a href="/cars">← Back</a>
+      <a href={data.user ? "/cars" : "/allinventor"}>← Back</a>
       <span>|</span>
       <span>{data.marke}</span>
       <span>›</span>

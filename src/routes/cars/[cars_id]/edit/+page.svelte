@@ -15,7 +15,7 @@
   let kw = $state(car.kw || "");
 
   let imageInput;
-  const maxImages = 30;
+  const maxImages = 5;
   let selectedImages = $state(
     (car.images || []).map((url) => ({
       type: "existing",
@@ -171,6 +171,13 @@
     </div>
 
     <form method="POST" action="?/update" enctype="multipart/form-data">
+      {#each selectedImages as image}
+        <input
+          type="hidden"
+          name="imageOrder"
+          value={image.type === "existing" ? `existing:${image.src}` : "new"}
+        />
+      {/each}
       <section class="form-section">
         <div class="section-title">
           <h2>Fahrzeug-Merkmale</h2>
@@ -788,12 +795,6 @@
         </div>
 
         <div class="image-upload-box">
-          <input
-            type="hidden"
-            name="existingImages"
-            value={existingImagesJson}
-          />
-
           <div class="upload-header">
             <div>
               <strong>Fahrzeugbilder</strong>
@@ -827,7 +828,10 @@
                     <span class="main-image-badge">Hauptbild</span>
                   {/if}
 
-                  <img src={image.preview} alt="Preview" />
+                  <img
+                    src={image.type === "existing" ? image.src : image.preview}
+                    alt="Preview"
+                  />
 
                   <div class="image-actions">
                     <button
@@ -873,10 +877,16 @@
             <label>Inventor</label>
             <select name="inventor" required>
               <option value="">Inventor auswählen</option>
-              <option value="Inventor A" selected={car.inventor === 'Inventor A'}>
+              <option
+                value="Inventor A"
+                selected={car.inventor === "Inventor A"}
+              >
                 Inventor A
               </option>
-              <option value="Inventor B" selected={car.inventor === 'Inventor B'}>
+              <option
+                value="Inventor B"
+                selected={car.inventor === "Inventor B"}
+              >
                 Inventor B
               </option>
             </select>
