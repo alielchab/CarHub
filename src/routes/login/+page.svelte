@@ -5,6 +5,9 @@
 <div class="container">
   <h1>Login</h1>
 
+  <p>Nur der Administrator-Login ist vorhanden und berechtigt, sich im System anzumelden.
+    Es gibt keine Möglichkeit, einen neuen Benutzer zu registrieren. Bitte verwenden Sie die folgenden Anmeldedaten:</p>
+
   <form method="POST">
     <div class="mb-3">
       <label class="form-label">Benutzername</label>
