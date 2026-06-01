@@ -91,6 +91,25 @@ async function updateCar(car) {
   return null;
 }
 
+
+// Increment car views by id
+async function incrementCarViews(id) {
+  try {
+    const collection = db.collection("cars");
+
+    await collection.updateOne(
+      { _id: new ObjectId(id) },
+      { $inc: { views: 1 } }
+    );
+
+    return await getCar(id);
+  } catch (error) {
+    console.log(error.message);
+  }
+
+  return null;
+}
+
 // Delete car by id
 async function deleteCar(id) {
   try {
@@ -189,5 +208,6 @@ export default {
   getUserByUsername,
   getUserById, 
   updateCarStatus,
-  updateTopListing
+  updateTopListing,
+  incrementCarViews
 };

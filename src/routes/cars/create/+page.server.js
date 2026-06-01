@@ -25,6 +25,7 @@ export const actions = {
     const car = {
       status: saveAs === 'entwurf' ? 'entwurf' : 'aktiv',
       topListing: false,
+      views: 0,
 
       // Fahrzeug-Merkmale
       marke: data.get('marke'),
@@ -82,7 +83,6 @@ export const actions = {
       images: imageUrls,
       mainImage: imageUrls[0] ?? null,
 
-      inventor: data.get('inventor'),
       createdAt: new Date()
     };
 

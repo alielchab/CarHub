@@ -1,5 +1,5 @@
 <script>
-  import { tick } from "svelte";
+  import { tick, onMount } from "svelte";
   import {
     PUBLIC_CLOUDINARY_CLOUD_NAME,
     PUBLIC_CLOUDINARY_UPLOAD_PRESET,
@@ -18,6 +18,15 @@
 
   let selectedMake = $state("");
   let selectedModel = $state("");
+
+  let makeSearch = $state("");
+  let modelSearch = $state("");
+
+  let showMakeOptions = $state(false);
+  let showModelOptions = $state(false);
+
+  const maxDropdownResults = 80;
+
   let selectedGetriebe = $state("");
   let selectedArt = $state("");
   let selectedGarantie = $state("");
@@ -41,12 +50,13 @@
 
   async function loadModels() {
     selectedModel = "";
+    modelSearch = "";
     models = [];
 
     if (!selectedMake) return;
 
     const res = await fetch(
-      `https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/${selectedMake}?format=json`,
+      `https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/${encodeURIComponent(selectedMake)}?format=json`,
     );
 
     const data = await res.json();
@@ -54,7 +64,65 @@
     models = data.Results.map((model) => model.Model_Name).sort();
   }
 
+  let filteredMakes = $derived(
+    makes
+      .filter((make) =>
+        make.toLowerCase().includes(makeSearch.trim().toLowerCase()),
+      )
+      .slice(0, maxDropdownResults),
+  );
+
+  let filteredModels = $derived(
+    models
+      .filter((model) =>
+        model.toLowerCase().includes(modelSearch.trim().toLowerCase()),
+      )
+      .slice(0, maxDropdownResults),
+  );
+
+  function handleMakeTyping(event) {
+    makeSearch = event.target.value;
+    showMakeOptions = true;
+
+    if (makeSearch !== selectedMake) {
+      selectedMake = "";
+      selectedModel = "";
+      modelSearch = "";
+      models = [];
+    }
+  }
+
+  async function selectMake(make) {
+    selectedMake = make;
+    makeSearch = make;
+
+    selectedModel = "";
+    modelSearch = "";
+    models = [];
+
+    showMakeOptions = false;
+
+    await loadModels();
+  }
+
+  function handleModelTyping(event) {
+    modelSearch = event.target.value;
+    showModelOptions = true;
+
+    if (modelSearch !== selectedModel) {
+      selectedModel = "";
+    }
+  }
+
+  function selectModel(model) {
+    selectedModel = model;
+    modelSearch = model;
+    showModelOptions = false;
+  }
+
+onMount(() => {
   loadMakes();
+});
 
   //je nach dem welche Getriebeart ausgewählt wird, werden die entsprechenden Arten angezeigt
   const getriebeArten = {
@@ -120,6 +188,15 @@
     }
 
     event.preventDefault();
+    if (!selectedMake) {
+      alert("Bitte eine Marke aus der Liste auswählen.");
+      return;
+    }
+
+    if (!selectedModel) {
+      alert("Bitte ein Modell aus der Liste auswählen.");
+      return;
+    }
 
     uploadError = "";
     isUploadingImages = true;
@@ -244,6 +321,7 @@
       {#if isUploadingImages}
         <p>Bilder werden hochgeladen...</p>
       {/if}
+
       <!-- Fahrzeug Merkmale -->
       <section class="form-section">
         <div class="section-title">
@@ -253,42 +331,83 @@
         <div class="form-grid">
           <div class="field">
             <label>Marke *</label>
-            <select
-              name="marke"
-              required
-              bind:value={selectedMake}
-              onchange={loadModels}
-            >
-              <option value="">Marke auswählen</option>
+            <div class="search-select">
+              <input type="hidden" name="marke" value={selectedMake} />
 
-              {#each makes as make}
-                <option value={make}>{make}</option>
-              {/each}
-            </select>
+              <input required
+                type="text"
+                placeholder="Marke suchen..."
+                bind:value={makeSearch}
+                oninput={handleMakeTyping}
+                onfocus={() => (showMakeOptions = true)}
+                onblur={() => setTimeout(() => (showMakeOptions = false), 150)}
+                autocomplete="off"
+                class="search-input"
+              />
+
+              {#if showMakeOptions}
+                <div class="search-options">
+                  {#if filteredMakes.length > 0}
+                    {#each filteredMakes as make}
+                      <button
+                        type="button"
+                        class:selected-option={make === selectedMake}
+                        onclick={() => selectMake(make)}
+                      >
+                        {make}
+                      </button>
+                    {/each}
+                  {:else}
+                    <div class="no-options">Keine Marke gefunden</div>
+                  {/if}
+                </div>
+              {/if}
+            </div>
           </div>
 
           <div class="field">
             <label>Modell *</label>
-            <select
-              name="modell"
-              required
-              bind:value={selectedModel}
-              disabled={!selectedMake}
-            >
-              <option value="">
-                {selectedMake ? "Modell auswählen" : "Zuerst Marke auswählen"}
-              </option>
+            <div class="search-select">
+              <input type="hidden" name="modell" value={selectedModel} />
 
-              {#each models as model}
-                <option value={model}>{model}</option>
-              {/each}
-            </select>
+              <input required
+                type="text"
+                placeholder={selectedMake
+                  ? "Modell suchen..."
+                  : "Zuerst Marke auswählen"}
+                bind:value={modelSearch}
+                oninput={handleModelTyping}
+                onfocus={() => selectedMake && (showModelOptions = true)}
+                onblur={() => setTimeout(() => (showModelOptions = false), 150)}
+                autocomplete="off"
+                class="search-input"
+                disabled={!selectedMake}
+              />
+
+              {#if showModelOptions && selectedMake}
+                <div class="search-options">
+                  {#if filteredModels.length > 0}
+                    {#each filteredModels as model}
+                      <button
+                        type="button"
+                        class:selected-option={model === selectedModel}
+                        onclick={() => selectModel(model)}
+                      >
+                        {model}
+                      </button>
+                    {/each}
+                  {:else}
+                    <div class="no-options">Kein Modell gefunden</div>
+                  {/if}
+                </div>
+              {/if}
+            </div>
           </div>
 
           <div class="field">
             <label>Getriebe *</label>
             <select name="getriebe" required bind:value={selectedGetriebe}>
-              <option value="">Auswählen</option>
+              <option selected disabled value="">Auswählen</option>
               <option value="Automat">Automat</option>
               <option value="Schaltung">Schaltung</option>
             </select>
@@ -302,7 +421,7 @@
               bind:value={selectedArt}
               disabled={!selectedGetriebe}
             >
-              <option value="">
+              <option selected disabled value=""> 
                 {selectedGetriebe
                   ? "Art auswählen"
                   : "Zuerst Getriebe auswählen"}
@@ -323,8 +442,7 @@
             <label>Aufbau *</label>
 
             <select name="aufbau" required>
-              <option value="">Auswählen</option>
-
+              <option selected disabled value="">Auswählen</option>
               <option value="Bus">Bus</option>
               <option value="Cabriolet">Cabriolet</option>
               <option value="Coupé">Coupé</option>
@@ -342,21 +460,21 @@
           </div>
 
           <div class="field">
-            <label>Antrieb</label>
+            <label>Antrieb *</label>
             <select name="antrieb" required>
-              <option>Auswählen</option>
+              <option selected disabled value="">Auswählen</option>
 
-              <option value="Bus">Allrad</option>
-              <option value="Cabriolet">Hinterradantrieb</option>
-              <option value="Coupé">Vorderradantrieb</option>
+              <option value="Allrad">Allrad</option>
+              <option value="Hinterradantrieb">Hinterradantrieb</option>
+              <option value="Vorderradantrieb">Vorderradantrieb</option>
             </select>
           </div>
 
           <div class="field">
-            <label>Treibstoff</label>
+            <label>Treibstoff *</label>
 
             <select name="treibstoff" required>
-              <option value="">Treibstoff auswählen</option>
+              <option selected disabled value="">Treibstoff auswählen</option>
 
               <option value="Benzin">Benzin</option>
               <option value="Bioethanol/Benzin">Bioethanol/Benzin</option>
@@ -396,7 +514,7 @@
           </div>
 
           <div class="field">
-            <label>Fahrzeug Farbe</label>
+            <label>Fahrzeug Farbe *</label>
             <input name="farbe" type="text" required />
           </div>
 
@@ -404,7 +522,7 @@
             <label>Innenfarbe</label>
 
             <select name="innenfarbe" required>
-              <option value="">Auswählen</option>
+              <option selected disabled value="">Auswählen</option>
 
               <option value="anthrazit">anthrazit</option>
               <option value="beige">beige</option>
@@ -441,7 +559,7 @@
             <label>Fahrzeugzustand *</label>
 
             <select name="zustand" required>
-              <option value="">Fahrzeugzustand auswählen</option>
+              <option selected disabled value="">Fahrzeugzustand auswählen</option>
 
               <option value="Neues Fahrzeug">Neues Fahrzeug</option>
 
@@ -469,12 +587,12 @@
 
           <div class="field">
             <label>Inverkehrsetzung *</label>
-            <input name="inverkehrsetzung" type="date" />
+            <input required name="inverkehrsetzung" type="date" />
           </div>
 
           <div class="field">
             <label>Kilometer *</label>
-            <input name="kilometer" type="number" />
+            <input required name="kilometer" type="number" />
           </div>
         </div>
       </section>
@@ -489,7 +607,7 @@
             <label>Garantie</label>
 
             <select name="garantie" bind:value={selectedGarantie} required>
-              <option value=""> Garantie auswählen </option>
+              <option selected disabled value=""> Garantie auswählen </option>
 
               <option value="Keine Garantie"> Keine Garantie </option>
 
@@ -560,7 +678,7 @@
         <div class="form-grid">
           <div class="field">
             <label>Verkaufspreis - CHF *</label>
-            <input name="preis" type="number" />
+            <input required name="preis" type="number" />
           </div>
 
           <div class="field">
@@ -784,23 +902,6 @@
           {:else}
             <div class="empty-upload">Noch keine Bilder ausgewählt.</div>
           {/if}
-        </div>
-      </section>
-
-      <section class="form-section">
-        <div class="section-title">
-          <h2>In welchen Inventor speichern</h2>
-        </div>
-
-        <div class="form-grid">
-          <div class="field">
-            <label>Inventor</label>
-            <select name="inventor" required>
-              <option value="">Inventor auswählen</option>
-              <option value="Inventor A">Inventor A</option>
-              <option value="Inventor B">Inventor B</option>
-            </select>
-          </div>
         </div>
       </section>
 

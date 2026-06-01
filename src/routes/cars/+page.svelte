@@ -12,6 +12,7 @@
   let selectedGetriebe = $state("");
   let selectedAntrieb = $state("");
   let selectedStatus = $state("aktiv");
+  let selectedSort = $state("createdAt_desc");
 
   function countValues(cars, field) {
     const counts = {};
@@ -37,36 +38,65 @@
     }),
   );
 
-  let marken = $derived(countValues(carsByStatus, "marke"));
-  let treibstoffe = $derived(countValues(carsByStatus, "treibstoff"));
-  let zustaende = $derived(countValues(carsByStatus, "zustand"));
-  let aufbauten = $derived(countValues(carsByStatus, "aufbau"));
-  let farben = $derived(countValues(carsByStatus, "farbe"));
-  let getriebe = $derived(countValues(carsByStatus, "getriebe"));
-  let antriebe = $derived(countValues(carsByStatus, "antrieb"));
+  function carMatchesFilters(car, ignore = "") {
+    return (
+      (ignore === "marke" || !selectedMarke || car.marke === selectedMarke) &&
+      (ignore === "modell" ||
+        !selectedModell ||
+        car.modell === selectedModell) &&
+      (ignore === "treibstoff" ||
+        !selectedTreibstoff ||
+        car.treibstoff === selectedTreibstoff) &&
+      (ignore === "zustand" ||
+        !selectedZustand ||
+        car.zustand === selectedZustand) &&
+      (ignore === "aufbau" ||
+        !selectedAufbau ||
+        car.aufbau === selectedAufbau) &&
+      (ignore === "farbe" || !selectedFarbe || car.farbe === selectedFarbe) &&
+      (ignore === "getriebe" ||
+        !selectedGetriebe ||
+        car.getriebe === selectedGetriebe) &&
+      (ignore === "antrieb" ||
+        !selectedAntrieb ||
+        car.antrieb === selectedAntrieb)
+    );
+  }
 
-  let modelle = $derived(
-    countValues(
-      selectedMarke
-        ? carsByStatus.filter((car) => car.marke === selectedMarke)
-        : [],
-      "modell",
-    ),
-  );
+  function carsForFilterOptions(ignore) {
+    return carsByStatus.filter((car) => carMatchesFilters(car, ignore));
+  }
 
   let filteredCars = $derived(
-    carsByStatus.filter((car) => {
-      return (
-        (!selectedMarke || car.marke === selectedMarke) &&
-        (!selectedModell || car.modell === selectedModell) &&
-        (!selectedTreibstoff || car.treibstoff === selectedTreibstoff) &&
-        (!selectedZustand || car.zustand === selectedZustand) &&
-        (!selectedAufbau || car.aufbau === selectedAufbau) &&
-        (!selectedFarbe || car.farbe === selectedFarbe) &&
-        (!selectedGetriebe || car.getriebe === selectedGetriebe) &&
-        (!selectedAntrieb || car.antrieb === selectedAntrieb)
-      );
-    }),
+    carsByStatus.filter((car) => carMatchesFilters(car)),
+  );
+
+  let marken = $derived(countValues(carsForFilterOptions("marke"), "marke"));
+
+  let modelle = $derived(
+    selectedMarke ? countValues(carsForFilterOptions("modell"), "modell") : [],
+  );
+
+  let treibstoffe = $derived(
+    countValues(carsForFilterOptions("treibstoff"), "treibstoff"),
+  );
+
+  let zustaende = $derived(
+    countValues(carsForFilterOptions("zustand"), "zustand"),
+  );
+
+  let aufbauten = $derived(
+    countValues(carsForFilterOptions("aufbau"), "aufbau"),
+  );
+
+  let farben = $derived(countValues(carsForFilterOptions("farbe"), "farbe"));
+
+  let getriebe = $derived(
+    countValues(carsForFilterOptions("getriebe"), "getriebe"),
+  );
+
+  let antriebe = $derived(
+    countValues(carsForFilterOptions("antrieb"), "antrieb"),
   );
 
   function resetFilters() {
@@ -78,6 +108,8 @@
     selectedFarbe = "";
     selectedGetriebe = "";
     selectedAntrieb = "";
+
+    selectedSort = "createdAt_desc";
   }
 
   let activeCount = $derived(
@@ -103,6 +135,61 @@
 
   let sold = $derived(
     data.cars.filter((car) => car.status === "verkauft").length,
+  );
+
+  function toNumber(value) {
+    const number = Number(value);
+    return Number.isNaN(number) ? 0 : number;
+  }
+
+  function toDateTime(value) {
+    if (!value) return 0;
+
+    const time = new Date(value).getTime();
+    return Number.isNaN(time) ? 0 : time;
+  }
+
+  function compareText(a, b) {
+    return String(a ?? "").localeCompare(String(b ?? ""), "de", {
+      sensitivity: "base",
+    });
+  }
+
+  let sortedCars = $derived(
+    [...filteredCars].sort((a, b) => {
+      switch (selectedSort) {
+        case "createdAt_asc":
+          return toDateTime(a.createdAt) - toDateTime(b.createdAt);
+
+        case "createdAt_desc":
+          return toDateTime(b.createdAt) - toDateTime(a.createdAt);
+
+        case "marke_asc":
+          return compareText(a.marke, b.marke);
+
+        case "marke_desc":
+          return compareText(b.marke, a.marke);
+
+        case "preis_asc":
+          return toNumber(a.preis) - toNumber(b.preis);
+
+        case "preis_desc":
+          return toNumber(b.preis) - toNumber(a.preis);
+
+        case "jahrgang_asc":
+          return (
+            toDateTime(a.inverkehrsetzung) - toDateTime(b.inverkehrsetzung)
+          );
+
+        case "jahrgang_desc":
+          return (
+            toDateTime(b.inverkehrsetzung) - toDateTime(a.inverkehrsetzung)
+          );
+
+        default:
+          return toDateTime(b.createdAt) - toDateTime(a.createdAt);
+      }
+    }),
   );
 </script>
 
@@ -131,14 +218,14 @@
           bind:value={selectedMarke}
           onchange={() => (selectedModell = "")}
         >
-          <option value="">Marke</option>
+          <option selected disabled value="">Marke</option>
           {#each marken as [value, count]}
             <option {value}>{value} ({count})</option>
           {/each}
         </select>
 
         <select bind:value={selectedModell} disabled={!selectedMarke}>
-          <option value="">
+          <option selected disabled value="">
             {selectedMarke ? "Modell" : "Zuerst Marke auswählen"}
           </option>
           {#each modelle as [value, count]}
@@ -147,7 +234,7 @@
         </select>
 
         <select bind:value={selectedTreibstoff}>
-          <option value="">Treibstoff</option>
+          <option selected disabled value="">Treibstoff</option>
           {#each treibstoffe as [value, count]}
             <option {value}>{value} ({count})</option>
           {/each}
@@ -166,35 +253,35 @@
       {#if showMoreFilters}
         <div class="filters-grid extra-filters">
           <select bind:value={selectedZustand}>
-            <option value="">Fahrzeugzustand</option>
+            <option selected disabled value="">Fahrzeugzustand</option>
             {#each zustaende as [value, count]}
               <option {value}>{value} ({count})</option>
             {/each}
           </select>
 
           <select bind:value={selectedAufbau}>
-            <option value="">Aufbau</option>
+            <option selected disabled value="">Aufbau</option>
             {#each aufbauten as [value, count]}
               <option {value}>{value} ({count})</option>
             {/each}
           </select>
 
           <select bind:value={selectedFarbe}>
-            <option value="">Fahrzeugfarbe</option>
+            <option selected disabled value="">Fahrzeugfarbe</option>
             {#each farben as [value, count]}
               <option {value}>{value} ({count})</option>
             {/each}
           </select>
 
           <select bind:value={selectedGetriebe}>
-            <option value="">Getriebeart</option>
+            <option selected disabled value="">Getriebeart</option>
             {#each getriebe as [value, count]}
               <option {value}>{value} ({count})</option>
             {/each}
           </select>
 
           <select bind:value={selectedAntrieb}>
-            <option value="">Antrieb</option>
+            <option selected disabled value="">Antrieb</option>
             {#each antriebe as [value, count]}
               <option {value}>{value} ({count})</option>
             {/each}
@@ -247,24 +334,31 @@
             ↻ Filter zurücksetzen
           </button>
 
-          <button type="button" class="sort-btn">
-            ⇅ Neueste Inserate zuerst
-          </button>
+          <select bind:value={selectedSort} class="sort-select">
+            <option value="createdAt_desc">⇅ Neueste Inserate zuerst</option>
+            <option value="createdAt_asc">⇅ Älteste Inserate zuerst</option>
+            <option value="marke_asc">Marke A-Z</option>
+            <option value="marke_desc">Marke Z-A</option>
+            <option value="preis_asc">Preis niedrig bis hoch</option>
+            <option value="preis_desc">Preis hoch bis niedrig</option>
+            <option value="jahrgang_asc">Jahrgang alt bis neu</option>
+            <option value="jahrgang_desc">Jahrgang neu bis alt</option>
+          </select>
         </div>
       </div>
     </div>
 
     <div class="table-header">
       <span></span>
-      <span>Make and Model</span>
-      <span>Year</span>
+      <span>Marke und Model</span>
+      <span>Jahr</span>
       <span>CHF</span>
       <span>KM</span>
       <span>Views</span>
       <span></span>
     </div>
 
-    {#each filteredCars as car}
+    {#each sortedCars as car}
       <Car {car}></Car>
     {/each}
   </div>

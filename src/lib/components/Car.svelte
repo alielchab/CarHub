@@ -30,7 +30,7 @@
 
                     <a href="/cars/{car._id}">Vorschau</a>
 
-                    <a href={`/cars/${car._id}/edit`}>Edit data</a>
+                    <a href={`/cars/${car._id}/edit`}>Bearbeiten</a>
 
                     <form method="POST" action="?/sold">
                         <input type="hidden" name="id" value={car._id} />

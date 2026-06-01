@@ -90,7 +90,6 @@ export const actions = {
       images: imageUrls,
       mainImage: imageUrls[0] ?? null,
 
-      inventor: data.get('inventor'),
       updatedAt: new Date()
     };
 

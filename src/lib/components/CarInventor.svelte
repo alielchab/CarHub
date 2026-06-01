@@ -1,5 +1,5 @@
 <script>
-    let { car } = $props();
+  let { car } = $props();
 </script>
 
 <div class="car-card">
@@ -21,6 +21,12 @@
     <p class="label">Preis</p>
     <p class="price">CHF {car.preis}.-</p>
 
-    <a class="details" href={`/cars/${car._id}`}>DETAILS</a>
+    <a
+      href={`/cars/${car._id}`}
+      data-sveltekit-preload-data="off"
+      class="details"
+    >
+      DETAILS
+    </a>
   </div>
 </div>

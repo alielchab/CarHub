@@ -1,13 +1,16 @@
-import db from "$lib/db.js"
+import db from "$lib/db.js";
+import { error } from "@sveltejs/kit";
 
+export async function load({ params }) {
+  const id = params.cars_id ?? params.id;
 
-export async function load( {params, locals}) {
-  //  if(!locals.user) {
-  //   throw redirect(303, '/login');
-  // }
+  const car = await db.incrementCarViews(id);
 
-    const car = await db.getCar(params.cars_id);
-    return car;
+  if (!car) {
+    throw error(404, "Fahrzeug nicht gefunden");
+  }
 
-    
+  return {
+    car
+  };
 }

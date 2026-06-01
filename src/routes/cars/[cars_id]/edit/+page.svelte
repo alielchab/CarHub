@@ -369,7 +369,7 @@
           </div>
 
           <div class="field">
-            <label>Antrieb</label>
+            <label>Antrieb *</label>
             <select name="antrieb" required>
               <option value="">Auswählen</option>
               <option value="Allrad" selected={car.antrieb === "Allrad"}
@@ -389,7 +389,7 @@
           </div>
 
           <div class="field">
-            <label>Treibstoff</label>
+            <label>Treibstoff *</label>
             <select name="treibstoff" required>
               <option value="">Treibstoff auswählen</option>
               <option value="Benzin" selected={car.treibstoff === "Benzin"}
@@ -454,12 +454,12 @@
           </div>
 
           <div class="field">
-            <label>Fahrzeug Farbe</label>
+            <label>Fahrzeug Farbe *</label>
             <input name="farbe" type="text" required value={car.farbe || ""} />
           </div>
 
           <div class="field">
-            <label>Innenfarbe</label>
+            <label>Innenfarbe *</label>
             <select name="innenfarbe" required>
               <option value="">Auswählen</option>
               <option
@@ -572,7 +572,7 @@
 
           <div class="field">
             <label>Inverkehrsetzung *</label>
-            <input
+            <input required
               name="inverkehrsetzung"
               type="date"
               value={car.inverkehrsetzung || ""}
@@ -581,7 +581,7 @@
 
           <div class="field">
             <label>Kilometer *</label>
-            <input name="kilometer" type="number" value={car.kilometer || ""} />
+            <input required name="kilometer" type="number" value={car.kilometer || ""} />
           </div>
         </div>
       </section>
@@ -593,7 +593,7 @@
 
         <div class="form-grid">
           <div class="field">
-            <label>Garantie</label>
+            <label>Garantie *</label>
 
             <select name="garantie" bind:value={selectedGarantie} required>
               <option value="">Garantie auswählen</option>
@@ -932,32 +932,6 @@
         </div>
       </section>
 
-      <section class="form-section">
-        <div class="section-title">
-          <h2>In welchen Inventor speichern</h2>
-        </div>
-
-        <div class="form-grid">
-          <div class="field">
-            <label>Inventor</label>
-            <select name="inventor" required>
-              <option value="">Inventor auswählen</option>
-              <option
-                value="Inventor A"
-                selected={car.inventor === "Inventor A"}
-              >
-                Inventor A
-              </option>
-              <option
-                value="Inventor B"
-                selected={car.inventor === "Inventor B"}
-              >
-                Inventor B
-              </option>
-            </select>
-          </div>
-        </div>
-      </section>
 
       {#if form?.error}
         <p class="text-danger">{form.error}</p>

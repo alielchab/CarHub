@@ -22,7 +22,7 @@
     <!-- <a href="/search">Search</a> -->
 
    
-        <a href="/allinventor">Alle Fahrzeuge</a>
+        <a href="/fahrzeuge">Alle Fahrzeuge</a>
        
 
 
