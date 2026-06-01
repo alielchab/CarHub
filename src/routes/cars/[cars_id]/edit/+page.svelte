@@ -1,28 +1,45 @@
 <script>
+  import { tick, onMount } from "svelte";
+  import {
+    PUBLIC_CLOUDINARY_CLOUD_NAME,
+    PUBLIC_CLOUDINARY_UPLOAD_PRESET,
+  } from "$env/static/public";
+
   let { data, form } = $props();
 
-  let car = data.car;
+  const car = data.car;
 
   let makes = $state([]);
   let models = $state([]);
 
-  let selectedMake = $state(car.marke || "");
-  let selectedModel = $state(car.modell || "");
-  let selectedGetriebe = $state(car.getriebe || "");
-  let selectedArt = $state(car.art || "");
-  let selectedGarantie = $state(car.garantie || "");
-  let ps = $state(car.leistung || "");
-  let kw = $state(car.kw || "");
+  let selectedMake = $state(car.marke ?? "");
+  let selectedModel = $state(car.modell ?? "");
+  let selectedGetriebe = $state(car.getriebe ?? "");
+  let selectedArt = $state(car.art ?? "");
+  let selectedGarantie = $state(car.garantie ?? "");
 
+  let ps = $state(car.leistung ?? "");
+  let kw = $state(car.kw ?? "");
+
+  let formElement;
   let imageInput;
-  const maxImages = 5;
+
+  let isSubmittingAfterUpload = $state(false);
+  let isUploadingImages = $state(false);
+  let uploadError = $state("");
+
+  const maxImages = 30;
+
   let selectedImages = $state(
-    (car.images || []).map((url) => ({
+    (car.images ?? []).map((url) => ({
       type: "existing",
       url,
       preview: url,
+      file: null,
+      publicId: null,
     })),
   );
+
   let remainingImages = $derived(maxImages - selectedImages.length);
 
   async function loadMakes() {
@@ -30,12 +47,13 @@
       "https://vpic.nhtsa.dot.gov/api/vehicles/GetAllMakes?format=json",
     );
 
-    const apiData = await res.json();
-    makes = apiData.Results.map((make) => make.Make_Name).sort();
+    const result = await res.json();
+
+    makes = result.Results.map((make) => make.Make_Name).sort();
   }
 
-  async function loadModels(keepCurrentModel = false) {
-    if (!keepCurrentModel) {
+  async function loadModels(resetModel = true) {
+    if (resetModel) {
       selectedModel = "";
     }
 
@@ -47,19 +65,15 @@
       `https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/${selectedMake}?format=json`,
     );
 
-    const apiData = await res.json();
-    models = apiData.Results.map((model) => model.Model_Name).sort();
+    const result = await res.json();
+
+    models = result.Results.map((model) => model.Model_Name).sort();
   }
 
-  async function init() {
+  onMount(async () => {
     await loadMakes();
-
-    if (selectedMake) {
-      await loadModels(true);
-    }
-  }
-
-  init();
+    await loadModels(false);
+  });
 
   const getriebeArten = {
     Automat: ["Automat", "Stufenlos", "Halbautomatisches Getriebe"],
@@ -88,7 +102,70 @@
     ps = Math.round(Number(kw) / 0.735499);
   }
 
-  // Image upload handling
+  async function uploadImageToCloudinary(file) {
+    const uploadData = new FormData();
+
+    uploadData.append("file", file);
+    uploadData.append("upload_preset", PUBLIC_CLOUDINARY_UPLOAD_PRESET);
+
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/${PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+      {
+        method: "POST",
+        body: uploadData,
+      },
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Cloudinary error:", errorText);
+      throw new Error("Cloudinary Upload fehlgeschlagen");
+    }
+
+    const result = await response.json();
+
+    return {
+      url: result.secure_url,
+      publicId: result.public_id,
+    };
+  }
+
+  async function handleSubmit(event) {
+    if (isSubmittingAfterUpload) {
+      return;
+    }
+
+    event.preventDefault();
+
+    uploadError = "";
+    isUploadingImages = true;
+
+    try {
+      for (const image of selectedImages) {
+        if (image.type === "new" && !image.url) {
+          const uploaded = await uploadImageToCloudinary(image.file);
+
+          image.url = uploaded.url;
+          image.publicId = uploaded.publicId;
+          image.preview = uploaded.url;
+        }
+      }
+
+      selectedImages = [...selectedImages];
+
+      await tick();
+
+      isSubmittingAfterUpload = true;
+      formElement.requestSubmit();
+    } catch (error) {
+      console.error(error);
+      uploadError = "Bilder konnten nicht hochgeladen werden.";
+      alert("Bilder konnten nicht hochgeladen werden.");
+    } finally {
+      isUploadingImages = false;
+    }
+  }
+
   function handleImageChange(event) {
     const files = Array.from(event.target.files);
 
@@ -99,6 +176,8 @@
       type: "new",
       file,
       preview: URL.createObjectURL(file),
+      url: null,
+      publicId: null,
     }));
 
     selectedImages = [...selectedImages, ...newImages];
@@ -109,7 +188,7 @@
   function removeImage(index) {
     const image = selectedImages[index];
 
-    if (image.type === "new") {
+    if (image.type === "new" && image.preview) {
       URL.revokeObjectURL(image.preview);
     }
 
@@ -125,8 +204,6 @@
     [copy[index - 1], copy[index]] = [copy[index], copy[index - 1]];
 
     selectedImages = copy;
-
-    updateFileInput();
   }
 
   function moveImageRight(index) {
@@ -136,31 +213,13 @@
     [copy[index], copy[index + 1]] = [copy[index + 1], copy[index]];
 
     selectedImages = copy;
-
-    updateFileInput();
   }
 
   function updateFileInput() {
     if (!imageInput) return;
 
-    const dataTransfer = new DataTransfer();
-
-    for (const image of selectedImages) {
-      if (image.type === "new") {
-        dataTransfer.items.add(image.file);
-      }
-    }
-
-    imageInput.files = dataTransfer.files;
+    imageInput.value = "";
   }
-
-  let existingImagesJson = $derived(
-    JSON.stringify(
-      selectedImages
-        .filter((image) => image.type === "existing")
-        .map((image) => image.url),
-    ),
-  );
 </script>
 
 <div class="create-page">
@@ -169,15 +228,25 @@
       <h1>Fahrzeug bearbeiten</h1>
       <p>Bearbeite die gespeicherten Fahrzeugdaten.</p>
     </div>
-
-    <form method="POST" action="?/update" enctype="multipart/form-data">
+    <form
+      bind:this={formElement}
+      method="POST"
+      action="?/update"
+      onsubmit={handleSubmit}
+    >
       {#each selectedImages as image}
-        <input
-          type="hidden"
-          name="imageOrder"
-          value={image.type === "existing" ? `existing:${image.src}` : "new"}
-        />
+        {#if image.url}
+          <input type="hidden" name="imageUrls" value={image.url} />
+        {/if}
       {/each}
+
+      {#if uploadError}
+        <p class="error-message">{uploadError}</p>
+      {/if}
+
+      {#if isUploadingImages}
+        <p>Bilder werden hochgeladen...</p>
+      {/if}
       <section class="form-section">
         <div class="section-title">
           <h2>Fahrzeug-Merkmale</h2>
@@ -190,7 +259,7 @@
               name="marke"
               required
               bind:value={selectedMake}
-              onchange={() => loadModels(false)}
+              onchange={() => loadModels(true)}
             >
               <option value="">Marke auswählen</option>
 
@@ -809,7 +878,6 @@
 
               <input
                 bind:this={imageInput}
-                name="images"
                 type="file"
                 accept="image/*"
                 multiple
@@ -828,10 +896,7 @@
                     <span class="main-image-badge">Hauptbild</span>
                   {/if}
 
-                  <img
-                    src={image.type === "existing" ? image.src : image.preview}
-                    alt="Preview"
-                  />
+                  <img src={image.preview} alt="Preview" />
 
                   <div class="image-actions">
                     <button
@@ -902,8 +967,8 @@
         <a href="/cars/" class="back-btn">← Zurück</a>
 
         <div class="right-actions">
-          <button type="submit" class="create-btn">
-            Änderungen speichern
+          <button type="submit" class="create-btn" disabled={isUploadingImages}>
+            Speichern
           </button>
         </div>
       </div>

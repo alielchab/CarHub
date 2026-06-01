@@ -1,15 +1,17 @@
 import db from '$lib/db.js';
 import { fail, redirect } from '@sveltejs/kit';
-import { getStore } from '@netlify/blobs';
-import path from 'node:path';
-import crypto from 'node:crypto';
 
 export async function load({ locals, params }) {
   if (!locals.user) {
     throw redirect(303, '/login');
   }
 
-  const car = await db.getCar(params.id);
+  console.log('EDIT PARAMS:', params);
+  console.log('CARS ID:', params.cars_id);
+
+  const car = await db.getCar(params.cars_id);
+
+  console.log('LOADED CAR:', car);
 
   if (!car) {
     throw redirect(303, '/cars');
@@ -19,7 +21,6 @@ export async function load({ locals, params }) {
     car
   };
 }
-
 export const actions = {
   update: async ({ request, locals, params }) => {
     if (!locals.user) {
@@ -28,55 +29,16 @@ export const actions = {
 
     const data = await request.formData();
 
-    const imageOrder = data.getAll('imageOrder').map(String);
+    const imageUrls = data.getAll('imageUrls').map(String).filter(Boolean);
 
-    const files = data
-      .getAll('images')
-      .filter((file) => file && file.name && file.size > 0);
-
-    const uploads = getStore('car-images');
-    const uploadedImagePaths = [];
-
-    for (const file of files) {
-      if (!file.type.startsWith('image/')) {
-        return fail(400, { error: 'Es sind nur Bilder erlaubt' });
-      }
-
-      const extension = path.extname(file.name).toLowerCase() || '.jpg';
-      const key = `cars/${crypto.randomUUID()}${extension}`;
-
-      const arrayBuffer = await file.arrayBuffer();
-
-      await uploads.set(key, arrayBuffer, {
-        metadata: {
-          contentType: file.type,
-          originalName: file.name
-        }
+    if (imageUrls.length > 30) {
+      return fail(400, {
+        error: 'Maximal 30 Bilder erlaubt.'
       });
-
-      uploadedImagePaths.push(`/api/images/${key}`);
-    }
-
-    let newImageIndex = 0;
-    const finalImages = [];
-
-    for (const item of imageOrder) {
-      if (item.startsWith('existing:')) {
-        finalImages.push(item.slice('existing:'.length));
-      }
-
-      if (item === 'new') {
-        const uploadedImage = uploadedImagePaths[newImageIndex];
-
-        if (uploadedImage) {
-          finalImages.push(uploadedImage);
-          newImageIndex++;
-        }
-      }
     }
 
     const updatedCar = {
-      _id: params.id,
+      _id: params.cars_id,
 
       marke: data.get('marke'),
       modell: data.get('modell'),
@@ -125,8 +87,8 @@ export const actions = {
       stammnummer: data.get('stammnummer'),
       wagen_nr: data.get('wagen_nr'),
 
-      images: finalImages,
-      mainImage: finalImages[0] ?? null,
+      images: imageUrls,
+      mainImage: imageUrls[0] ?? null,
 
       inventor: data.get('inventor'),
       updatedAt: new Date()
@@ -140,6 +102,6 @@ export const actions = {
       });
     }
 
-    throw redirect(303, `/cars/${params.id}`);
+    throw redirect(303, `/cars/${params.cars_id}`);
   }
 };

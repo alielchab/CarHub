@@ -14,7 +14,7 @@
 <nav class="as-navbar">
   <div class="as-left">
     <a href="/" class="as-logo">
-      <img src="images/logo/carhub_logo_transparent.png" alt="Logo" width="75" height="75" />
+      <img src="/images/logo/carhub_logo_transparent.png" alt="Logo" width="75" height="75" />
      
     </a>
 
