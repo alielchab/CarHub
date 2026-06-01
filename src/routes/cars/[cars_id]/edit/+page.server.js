@@ -101,6 +101,6 @@ export const actions = {
       });
     }
 
-    throw redirect(303, `/cars/${params.cars_id}`);
+   throw redirect(303, '/successEdit');
   }
 };

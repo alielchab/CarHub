@@ -9,7 +9,7 @@
     <h2>{car.marke} {car.modell} {car.version}</h2>
 
     <div class="car-grid">
-      <p>⚡ {car.kw || "-"} KW</p>
+      <p>⚡ {car.leistung || "-"} PS</p>
       <p>🛣️ {car.kilometer} km</p>
       <p>⚙️ {car.antrieb}</p>
 
