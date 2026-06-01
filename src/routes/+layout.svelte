@@ -21,15 +21,10 @@
     <a href="/">Home</a>
     <!-- <a href="/search">Search</a> -->
 
-   <div class="dropdown">
-    <button>Alle Fahrzeuge ▼</button>
-
-    <div class="dropdown-content">
+   
         <a href="/allinventor">Alle Fahrzeuge</a>
-        <a href="/inventor/a">Fahrzeuge A</a>
-        <a href="/inventor/b">Fahrzeuge B</a>
-    </div>
-</div>
+       
+
 
     <a href="/toplisting">Top Listing</a>
   </div>

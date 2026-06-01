@@ -1,1 +1,0 @@
-<h1>Inventor B</h1>
