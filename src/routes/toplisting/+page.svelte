@@ -229,9 +229,7 @@
 
   <div class="filter-bottom">
     <div class="filter-actions-row">
-      <button type="button" class="reset-btn" onclick={resetFilters}>
-        ↻ Filter zurücksetzen
-      </button>
+      <button type="button" class="reset-btn" onclick={resetFilters}>↻ Filter zurücksetzen</button>
 
       <select bind:value={selectedSort} class="sort-select">
         <option value="createdAt_desc">⇅ Neueste Inserate zuerst</option>

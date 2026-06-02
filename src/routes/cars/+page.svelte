@@ -200,7 +200,6 @@
         <h1>Meine Fahrzeuge verwalten</h1>
         <p>Übersicht aller Fahrzeuge in Ihrer virtuellen Garage.</p>
       </div>
-
       <a href="/cars/create" class="add-btn">+ Neues Fahrzeug hinzufügen</a>
     </div>
 
@@ -214,10 +213,7 @@
 
       <!-- Erste Reihe -->
       <div class="filters-grid">
-        <select
-          bind:value={selectedMarke}
-          onchange={() => (selectedModell = "")}
-        >
+        <select bind:value={selectedMarke} onchange={() => (selectedModell = "")}>
           <option selected disabled value="">Marke</option>
           {#each marken as [value, count]}
             <option {value}>{value} ({count})</option>
@@ -225,9 +221,7 @@
         </select>
 
         <select bind:value={selectedModell} disabled={!selectedMarke}>
-          <option selected disabled value="">
-            {selectedMarke ? "Modell" : "Zuerst Marke auswählen"}
-          </option>
+          <option selected disabled value="">{selectedMarke ? "Modell" : "Zuerst Marke auswählen"}</option>
           {#each modelle as [value, count]}
             <option {value}>{value} ({count})</option>
           {/each}
@@ -240,13 +234,7 @@
           {/each}
         </select>
 
-        <button
-          type="button"
-          class="filter-btn"
-          onclick={() => (showMoreFilters = !showMoreFilters)}
-        >
-          {showMoreFilters ? "Weniger Filter" : "Mehr Filter"}
-        </button>
+        <button type="button" class="filter-btn" onclick={() => (showMoreFilters = !showMoreFilters)}>{showMoreFilters ? "Weniger Filter" : "Mehr Filter"}</button>
       </div>
 
       <!-- Erweiterte Filter -->
@@ -310,11 +298,7 @@
           </label>
 
           <label>
-            <input
-              type="radio"
-              bind:group={selectedStatus}
-              value="toplisting"
-            />
+            <input type="radio" bind:group={selectedStatus} value="toplisting"/>
             Top Listing ({toplisting})
           </label>
 
@@ -330,9 +314,7 @@
         </div>
 
         <div class="status-right">
-          <button type="button" class="reset-btn" onclick={resetFilters}>
-            ↻ Filter zurücksetzen
-          </button>
+          <button type="button" class="reset-btn" onclick={resetFilters}>↻ Filter zurücksetzen</button>
 
           <select bind:value={selectedSort} class="sort-select">
             <option value="createdAt_desc">⇅ Neueste Inserate zuerst</option>

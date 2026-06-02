@@ -28,7 +28,7 @@
   let isUploadingImages = $state(false);
   let uploadError = $state("");
 
-  const maxImages = 30;
+  const maxImages = 5;
 
   let selectedImages = $state(
     (car.images ?? []).map((url) => ({
@@ -228,12 +228,7 @@
       <h1>Fahrzeug bearbeiten</h1>
       <p>Bearbeite die gespeicherten Fahrzeugdaten.</p>
     </div>
-    <form
-      bind:this={formElement}
-      method="POST"
-      action="?/update"
-      onsubmit={handleSubmit}
-    >
+    <form bind:this={formElement} method="POST" action="?/update" onsubmit={handleSubmit}>
       {#each selectedImages as image}
         {#if image.url}
           <input type="hidden" name="imageUrls" value={image.url} />
@@ -255,12 +250,7 @@
         <div class="form-grid">
           <div class="field">
             <label>Marke *</label>
-            <select
-              name="marke"
-              required
-              bind:value={selectedMake}
-              onchange={() => loadModels(true)}
-            >
+            <select name="marke" required bind:value={selectedMake} onchange={() => loadModels(true)}>
               <option value="">Marke auswählen</option>
 
               {#each makes as make}
@@ -271,12 +261,7 @@
 
           <div class="field">
             <label>Modell *</label>
-            <select
-              name="modell"
-              required
-              bind:value={selectedModel}
-              disabled={!selectedMake}
-            >
+            <select name="modell" required bind:value={selectedModel} disabled={!selectedMake}>
               <option value="">
                 {selectedMake ? "Modell auswählen" : "Zuerst Marke auswählen"}
               </option>
@@ -298,17 +283,8 @@
 
           <div class="field">
             <label>Art *</label>
-            <select
-              name="art"
-              required
-              bind:value={selectedArt}
-              disabled={!selectedGetriebe}
-            >
-              <option value="">
-                {selectedGetriebe
-                  ? "Art auswählen"
-                  : "Zuerst Getriebe auswählen"}
-              </option>
+            <select name="art" required bind:value={selectedArt} disabled={!selectedGetriebe}>
+              <option value="">{selectedGetriebe ? "Art auswählen" : "Zuerst Getriebe auswählen"}</option>
 
               {#each availableArten as art}
                 <option value={art}>{art}</option>
@@ -326,45 +302,18 @@
             <select name="aufbau" required>
               <option value="">Auswählen</option>
               <option value="Bus" selected={car.aufbau === "Bus"}>Bus</option>
-              <option value="Cabriolet" selected={car.aufbau === "Cabriolet"}
-                >Cabriolet</option
-              >
-              <option value="Coupé" selected={car.aufbau === "Coupé"}
-                >Coupé</option
-              >
-              <option value="Kleinwagen" selected={car.aufbau === "Kleinwagen"}
-                >Kleinwagen</option
-              >
-              <option value="Kombi" selected={car.aufbau === "Kombi"}
-                >Kombi</option
-              >
-              <option
-                value="Kompaktvan / Minivan"
-                selected={car.aufbau === "Kompaktvan / Minivan"}
-                >Kompaktvan / Minivan</option
-              >
-              <option value="Limousine" selected={car.aufbau === "Limousine"}
-                >Limousine</option
-              >
-              <option value="Pick-up" selected={car.aufbau === "Pick-up"}
-                >Pick-up</option
-              >
-              <option
-                value="SUV / Geländewagen"
-                selected={car.aufbau === "SUV / Geländewagen"}
-                >SUV / Geländewagen</option
-              >
+              <option value="Cabriolet" selected={car.aufbau === "Cabriolet"}>Cabriolet</option>
+              <option value="Coupé" selected={car.aufbau === "Coupé"}>Coupé</option>
+              <option value="Kleinwagen" selected={car.aufbau === "Kleinwagen"}>Kleinwagen</option>
+              <option value="Kombi" selected={car.aufbau === "Kombi"}>Kombi</option>
+              <option value="Kompaktvan / Minivan"selected={car.aufbau === "Kompaktvan / Minivan"}>Kompaktvan / Minivan</option>
+              <option value="Limousine" selected={car.aufbau === "Limousine"}>Limousine</option>
+              <option value="Pick-up" selected={car.aufbau === "Pick-up"}>Pick-up</option>
+              <option value="SUV / Geländewagen" selected={car.aufbau === "SUV / Geländewagen"}>SUV / Geländewagen</option>
               <option value="Van" selected={car.aufbau === "Van"}>Van</option>
-              <option value="Wohnmobil" selected={car.aufbau === "Wohnmobil"}
-                >Wohnmobil</option
-              >
-              <option
-                value="Transporter"
-                selected={car.aufbau === "Transporter"}>Transporter</option
-              >
-              <option value="Roadster" selected={car.aufbau === "Roadster"}
-                >Roadster</option
-              >
+              <option value="Wohnmobil" selected={car.aufbau === "Wohnmobil"}>Wohnmobil</option>
+              <option value="Transporter" selected={car.aufbau === "Transporter"}>Transporter</option>
+              <option value="Roadster" selected={car.aufbau === "Roadster"}>Roadster</option>
             </select>
           </div>
 
@@ -372,19 +321,9 @@
             <label>Antrieb *</label>
             <select name="antrieb" required>
               <option value="">Auswählen</option>
-              <option value="Allrad" selected={car.antrieb === "Allrad"}
-                >Allrad</option
-              >
-              <option
-                value="Hinterradantrieb"
-                selected={car.antrieb === "Hinterradantrieb"}
-                >Hinterradantrieb</option
-              >
-              <option
-                value="Vorderradantrieb"
-                selected={car.antrieb === "Vorderradantrieb"}
-                >Vorderradantrieb</option
-              >
+              <option value="Allrad" selected={car.antrieb === "Allrad"}>Allrad</option>
+              <option value="Hinterradantrieb" selected={car.antrieb === "Hinterradantrieb"}>Hinterradantrieb</option>
+              <option value="Vorderradantrieb" selected={car.antrieb === "Vorderradantrieb"}>Vorderradantrieb</option>
             </select>
           </div>
 
@@ -392,64 +331,19 @@
             <label>Treibstoff *</label>
             <select name="treibstoff" required>
               <option value="">Treibstoff auswählen</option>
-              <option value="Benzin" selected={car.treibstoff === "Benzin"}
-                >Benzin</option
-              >
-              <option
-                value="Bioethanol/Benzin"
-                selected={car.treibstoff === "Bioethanol/Benzin"}
-                >Bioethanol/Benzin</option
-              >
-              <option value="Diesel" selected={car.treibstoff === "Diesel"}
-                >Diesel</option
-              >
-              <option value="Elektro" selected={car.treibstoff === "Elektro"}
-                >Elektro</option
-              >
-              <option
-                value="Erdgas (CNG)/Benzin"
-                selected={car.treibstoff === "Erdgas (CNG)/Benzin"}
-                >Erdgas (CNG)/Benzin</option
-              >
-              <option
-                value="Flüssiggas (LPG)/Benzin"
-                selected={car.treibstoff === "Flüssiggas (LPG)/Benzin"}
-                >Flüssiggas (LPG)/Benzin</option
-              >
-              <option
-                value="Mild-Hybrid Benzin/Elektro"
-                selected={car.treibstoff === "Mild-Hybrid Benzin/Elektro"}
-                >Mild-Hybrid Benzin/Elektro</option
-              >
-              <option
-                value="Mild-Hybrid Diesel/Elektro"
-                selected={car.treibstoff === "Mild-Hybrid Diesel/Elektro"}
-                >Mild-Hybrid Diesel/Elektro</option
-              >
-              <option
-                value="Plug-in-Hybrid Benzin/Elektro"
-                selected={car.treibstoff === "Plug-in-Hybrid Benzin/Elektro"}
-                >Plug-in-Hybrid Benzin/Elektro</option
-              >
-              <option
-                value="Plug-in-Hybrid Diesel/Elektro"
-                selected={car.treibstoff === "Plug-in-Hybrid Diesel/Elektro"}
-                >Plug-in-Hybrid Diesel/Elektro</option
-              >
-              <option
-                value="Voll-Hybrid Benzin/Elektro"
-                selected={car.treibstoff === "Voll-Hybrid Benzin/Elektro"}
-                >Voll-Hybrid Benzin/Elektro</option
-              >
-              <option
-                value="Voll-Hybrid Diesel/Elektro"
-                selected={car.treibstoff === "Voll-Hybrid Diesel/Elektro"}
-                >Voll-Hybrid Diesel/Elektro</option
-              >
-              <option
-                value="Wasserstoff"
-                selected={car.treibstoff === "Wasserstoff"}>Wasserstoff</option
-              >
+              <option value="Benzin" selected={car.treibstoff === "Benzin"}>Benzin</option>
+              <option value="Bioethanol/Benzin" selected={car.treibstoff === "Bioethanol/Benzin"}>Bioethanol/Benzin</option>
+              <option value="Diesel" selected={car.treibstoff === "Diesel"}>Diesel</option>
+              <option value="Elektro" selected={car.treibstoff === "Elektro"}>Elektro</option>
+              <option value="Erdgas (CNG)/Benzin" selected={car.treibstoff === "Erdgas (CNG)/Benzin"}>Erdgas (CNG)/Benzin</option>
+              <option value="Flüssiggas (LPG)/Benzin" selected={car.treibstoff === "Flüssiggas (LPG)/Benzin"}>Flüssiggas (LPG)/Benzin</option>
+              <option value="Mild-Hybrid Benzin/Elektro" selected={car.treibstoff === "Mild-Hybrid Benzin/Elektro"}>Mild-Hybrid Benzin/Elektro</option>
+              <option value="Mild-Hybrid Diesel/Elektro" selected={car.treibstoff === "Mild-Hybrid Diesel/Elektro"}>Mild-Hybrid Diesel/Elektro</option>
+              <option value="Plug-in-Hybrid Benzin/Elektro" selected={car.treibstoff === "Plug-in-Hybrid Benzin/Elektro"}>Plug-in-Hybrid Benzin/Elektro</option>
+              <option value="Plug-in-Hybrid Diesel/Elektro" selected={car.treibstoff === "Plug-in-Hybrid Diesel/Elektro"}>Plug-in-Hybrid Diesel/Elektro</option>
+              <option value="Voll-Hybrid Benzin/Elektro" selected={car.treibstoff === "Voll-Hybrid Benzin/Elektro"}>Voll-Hybrid Benzin/Elektro</option>
+              <option value="Voll-Hybrid Diesel/Elektro" selected={car.treibstoff === "Voll-Hybrid Diesel/Elektro"}>Voll-Hybrid Diesel/Elektro</option>
+              <option value="Wasserstoff" selected={car.treibstoff === "Wasserstoff"}>Wasserstoff</option>
             </select>
           </div>
 
@@ -462,66 +356,25 @@
             <label>Innenfarbe *</label>
             <select name="innenfarbe" required>
               <option value="">Auswählen</option>
-              <option
-                value="anthrazit"
-                selected={car.innenfarbe === "anthrazit"}>anthrazit</option
-              >
-              <option value="beige" selected={car.innenfarbe === "beige"}
-                >beige</option
-              >
-              <option value="blau" selected={car.innenfarbe === "blau"}
-                >blau</option
-              >
-              <option value="bordeaux" selected={car.innenfarbe === "bordeaux"}
-                >bordeaux</option
-              >
-              <option value="braun" selected={car.innenfarbe === "braun"}
-                >braun</option
-              >
-              <option value="gelb" selected={car.innenfarbe === "gelb"}
-                >gelb</option
-              >
-              <option value="gold" selected={car.innenfarbe === "gold"}
-                >gold</option
-              >
-              <option value="grau" selected={car.innenfarbe === "grau"}
-                >grau</option
-              >
-              <option value="grün" selected={car.innenfarbe === "grün"}
-                >grün</option
-              >
-              <option
-                value="mehrfarbig"
-                selected={car.innenfarbe === "mehrfarbig"}>mehrfarbig</option
-              >
-              <option value="orange" selected={car.innenfarbe === "orange"}
-                >orange</option
-              >
-              <option value="rosa" selected={car.innenfarbe === "rosa"}
-                >rosa</option
-              >
-              <option value="rot" selected={car.innenfarbe === "rot"}
-                >rot</option
-              >
-              <option value="schwarz" selected={car.innenfarbe === "schwarz"}
-                >schwarz</option
-              >
-              <option value="silber" selected={car.innenfarbe === "silber"}
-                >silber</option
-              >
-              <option value="türkis" selected={car.innenfarbe === "türkis"}
-                >türkis</option
-              >
-              <option value="violett" selected={car.innenfarbe === "violett"}
-                >violett</option
-              >
-              <option value="weiss" selected={car.innenfarbe === "weiss"}
-                >weiss</option
-              >
-              <option
-                value="sonstiges"
-                selected={car.innenfarbe === "sonstiges"}>sonstiges</option
-              >
+              <option value="anthrazit" selected={car.innenfarbe === "anthrazit"}>anthrazit</option>
+              <option value="beige" selected={car.innenfarbe === "beige"}>beige</option>
+              <option value="blau" selected={car.innenfarbe === "blau"}>blau</option>
+              <option value="bordeaux" selected={car.innenfarbe === "bordeaux"}>bordeaux</option>
+              <option value="braun" selected={car.innenfarbe === "braun"}>braun</option>
+              <option value="gelb" selected={car.innenfarbe === "gelb"}>gelb</option>
+              <option value="gold" selected={car.innenfarbe === "gold"}>gold</option>
+              <option value="grau" selected={car.innenfarbe === "grau"}>grau</option>
+              <option value="grün" selected={car.innenfarbe === "grün"}>grün</option>
+              <option value="mehrfarbig" selected={car.innenfarbe === "mehrfarbig"}>mehrfarbig</option>
+              <option value="orange" selected={car.innenfarbe === "orange"}>orange</option>
+              <option value="rosa" selected={car.innenfarbe === "rosa"}>rosa</option>
+              <option value="rot" selected={car.innenfarbe === "rot"}>rot</option>
+              <option value="schwarz" selected={car.innenfarbe === "schwarz"}>schwarz</option>
+              <option value="silber" selected={car.innenfarbe === "silber"}>silber</option>
+              <option value="türkis" selected={car.innenfarbe === "türkis"}>türkis</option>
+              <option value="violett" selected={car.innenfarbe === "violett"}>violett</option>
+              <option value="weiss" selected={car.innenfarbe === "weiss"}>weiss</option>
+              <option value="sonstiges" selected={car.innenfarbe === "sonstiges"}>sonstiges</option>
             </select>
           </div>
         </div>
@@ -537,26 +390,11 @@
             <label>Fahrzeugzustand *</label>
             <select name="zustand" required>
               <option value="">Fahrzeugzustand auswählen</option>
-              <option
-                value="Neues Fahrzeug"
-                selected={car.zustand === "Neues Fahrzeug"}
-                >Neues Fahrzeug</option
-              >
-              <option
-                value="Neues Fahrzeug mit Tageszulassung"
-                selected={car.zustand === "Neues Fahrzeug mit Tageszulassung"}
-                >Neues Fahrzeug mit Tageszulassung</option
-              >
-              <option value="Occasion" selected={car.zustand === "Occasion"}
-                >Occasion</option
-              >
-              <option value="Oldtimer" selected={car.zustand === "Oldtimer"}
-                >Oldtimer</option
-              >
-              <option
-                value="Vorführmodell"
-                selected={car.zustand === "Vorführmodell"}>Vorführmodell</option
-              >
+              <option value="Neues Fahrzeug" selected={car.zustand === "Neues Fahrzeug"}>Neues Fahrzeug</option>
+              <option value="Neues Fahrzeug mit Tageszulassung" selected={car.zustand === "Neues Fahrzeug mit Tageszulassung"}>Neues Fahrzeug mit Tageszulassung</option>
+              <option value="Occasion" selected={car.zustand === "Occasion"}>Occasion</option>
+              <option value="Oldtimer" selected={car.zustand === "Oldtimer"}>Oldtimer</option>
+              <option value="Vorführmodell" selected={car.zustand === "Vorführmodell"}>Vorführmodell</option>
             </select>
           </div>
 
@@ -572,11 +410,7 @@
 
           <div class="field">
             <label>Inverkehrsetzung *</label>
-            <input required
-              name="inverkehrsetzung"
-              type="date"
-              value={car.inverkehrsetzung || ""}
-            />
+            <input required name="inverkehrsetzung" type="date" value={car.inverkehrsetzung || ""}/>
           </div>
 
           <div class="field">
@@ -599,9 +433,7 @@
               <option value="">Garantie auswählen</option>
               <option value="Keine Garantie">Keine Garantie</option>
               <option value="Ab Übernahme">Ab Übernahme</option>
-              <option value="Ab 1. Inverkehrsetzung"
-                >Ab 1. Inverkehrsetzung</option
-              >
+              <option value="Ab 1. Inverkehrsetzung">Ab 1. Inverkehrsetzung</option>
               <option value="Ab Datum">Ab Datum</option>
             </select>
           </div>
@@ -618,41 +450,23 @@
             {#if selectedGarantie === "Ab Datum"}
               <div class="field full-width">
                 <label>Garantiebeginn</label>
-                <input
-                  type="date"
-                  name="garantie_datum"
-                  value={car.garantie_datum || ""}
-                />
+                <input type="date" name="garantie_datum" value={car.garantie_datum || ""}/>
               </div>
             {/if}
 
             <div class="field">
               <label>Dauer (Monate) *</label>
-              <input
-                type="number"
-                name="garantie_monate"
-                value={car.garantie_monate || ""}
-              />
+              <input type="number" name="garantie_monate" value={car.garantie_monate || ""}/>
             </div>
 
             <div class="field">
               <label>max. KM</label>
-              <input
-                type="number"
-                name="garantie_km"
-                value={car.garantie_km || ""}
-              />
+              <input type="number" name="garantie_km" value={car.garantie_km || ""}/>
             </div>
 
             <div class="field full-width">
               <label>Beschreibung der Garantie</label>
-              <textarea
-                name="garantie_beschreibung"
-                rows="5"
-                maxlength="100"
-                placeholder="Beschreibung der Garantie, wie z.B. Herstellergarantie. (Maximal 100 Zeichen)"
-                >{car.garantie_beschreibung || ""}</textarea
-              >
+              <textarea name="garantie_beschreibung" rows="5" maxlength="100" placeholder="Beschreibung der Garantie, wie z.B. Herstellergarantie. (Maximal 100 Zeichen)">{car.garantie_beschreibung || ""}</textarea>
             </div>
           {/if}
         </div>
@@ -666,12 +480,7 @@
         <div class="form-grid">
           <div class="field">
             <label>Verkaufspreis - CHF *</label>
-            <input
-              name="preis"
-              type="number"
-              required
-              value={car.preis || ""}
-            />
+            <input name="preis" type="number" required value={car.preis || ""}/>
           </div>
 
           <div class="field">
@@ -686,9 +495,11 @@
           <h2>Technische Daten</h2>
         </div>
 
-        <div class="section-info">
-          Bitte wählen Sie eine Treibstoffart. Dann können wir Ihnen mehr
-          Informationen anzeigen.
+          <div class="section-info">
+         Nur PS und KW sind miteinander verknüpft und Pflichtfelder. Alle anderen Felder können unabhängig voneinander ausgefüllt werden.
+         PS und KW können durch Eingabe in eines der beiden Felder automatisch umgerechnet werden. Wenn Sie z.B. 150 PS eingeben, wird im KW-Feld automatisch 110 KW angezeigt.
+         Wenn Sie eines der beiden Felder ausfüllen, wird das andere Feld automatisch aktualisiert. Wenn Sie eines der beiden Felder löschen, wird das andere Feld ebenfalls geleert.
+         Alle anderen technischen Daten können unabhängig voneinander ausgefüllt werden, ohne dass sie miteinander verknüpft sind. Sie können z.B. die Anzahl der Türen eingeben, ohne dass dies Auswirkungen auf die PS oder KW hat. 
         </div>
 
         <div class="technical-grid">
@@ -706,22 +517,12 @@
 
               <div class="field">
                 <label>PS</label>
-                <input
-                  name="leistung"
-                  type="number"
-                  bind:value={ps}
-                  oninput={updateKw}
-                />
+                <input name="leistung" type="number" bind:value={ps} oninput={updateKw}/>
               </div>
 
               <div class="field">
                 <label>KW</label>
-                <input
-                  name="kw"
-                  type="number"
-                  bind:value={kw}
-                  oninput={updatePs}
-                />
+                <input name="kw" type="number" bind:value={kw} oninput={updatePs}/>
               </div>
 
               <div class="field full-width">
@@ -731,29 +532,17 @@
 
               <div class="field full-width">
                 <label>Radstand (mm)</label>
-                <input
-                  name="radstand"
-                  type="number"
-                  value={car.radstand || ""}
-                />
+                <input name="radstand" type="number" value={car.radstand || ""}/>
               </div>
 
               <div class="field">
                 <label>Leergewicht (kg)</label>
-                <input
-                  name="leergewicht"
-                  type="number"
-                  value={car.leergewicht || ""}
-                />
+                <input name="leergewicht" type="number" value={car.leergewicht || ""}/>
               </div>
 
               <div class="field">
                 <label>Nutzlast (kg)</label>
-                <input
-                  name="nutzlast"
-                  type="number"
-                  value={car.nutzlast || ""}
-                />
+                <input name="nutzlast" type="number" value={car.nutzlast || ""}/>
               </div>
 
               <div class="field full-width">
@@ -773,11 +562,7 @@
 
               <div class="field full-width">
                 <label>Anhängelast (kg) gebremst</label>
-                <input
-                  name="anhaengelast"
-                  type="number"
-                  value={car.anhaengelast || ""}
-                />
+                <input name="anhaengelast" type="number" value={car.anhaengelast || ""}/>
               </div>
             </div>
           </div>
@@ -787,44 +572,24 @@
               <label>Energieetikette</label>
               <select name="energieetikette">
                 <option value="">Energieetikette auswählen</option>
-                <option value="A" selected={car.energieetikette === "A"}
-                  >A</option
-                >
-                <option value="B" selected={car.energieetikette === "B"}
-                  >B</option
-                >
-                <option value="C" selected={car.energieetikette === "C"}
-                  >C</option
-                >
-                <option value="D" selected={car.energieetikette === "D"}
-                  >D</option
-                >
-                <option value="E" selected={car.energieetikette === "E"}
-                  >E</option
-                >
-                <option value="F" selected={car.energieetikette === "F"}
-                  >F</option
-                >
-                <option value="G" selected={car.energieetikette === "G"}
-                  >G</option
-                >
+                <option value="A" selected={car.energieetikette === "A"}>A</option>
+                <option value="B" selected={car.energieetikette === "B"}>B</option>
+                <option value="C" selected={car.energieetikette === "C"}>C</option>
+                <option value="D" selected={car.energieetikette === "D"}>D</option>
+                <option value="E" selected={car.energieetikette === "E"}>E</option>
+                <option value="F" selected={car.energieetikette === "F"}>F</option>
+                <option value="G" selected={car.energieetikette === "G"}>G</option>
               </select>
             </div>
 
             <div class="field">
               <label>Typengenehmigung</label>
-              <input
-                name="typengenehmigung"
-                value={car.typengenehmigung || ""}
-              />
+              <input name="typengenehmigung" value={car.typengenehmigung || ""}/>
             </div>
 
             <div class="field">
               <label>Fahrgestellnummer</label>
-              <input
-                name="fahrgestellnummer"
-                value={car.fahrgestellnummer || ""}
-              />
+              <input name="fahrgestellnummer" value={car.fahrgestellnummer || ""}/>
             </div>
 
             <div class="field">
@@ -848,12 +613,7 @@
         <div class="form-grid">
           <div class="field full-width">
             <label>Beschreibung</label>
-            <textarea
-              name="beschreibung"
-              rows="10"
-              placeholder="Beschreiben Sie das Fahrzeug..."
-              >{car.beschreibung || ""}</textarea
-            >
+            <textarea name="beschreibung" rows="10" placeholder="Beschreiben Sie das Fahrzeug...">{car.beschreibung || ""}</textarea>
           </div>
         </div>
       </section>
@@ -867,24 +627,17 @@
           <div class="upload-header">
             <div>
               <strong>Fahrzeugbilder</strong>
-              <p>{remainingImages} Bilder verfügbar</p>
+              {#if (remainingImages === 1)}
+                 <p>{remainingImages} Bild verfügbar</p>
+              {:else}
+                 <p>{remainingImages} Bilder verfügbar</p>
+              {/if}
+              
             </div>
 
-            <label
-              class:disabled-upload={remainingImages === 0}
-              class="upload-btn"
-            >
+            <label class:disabled-upload={remainingImages === 0} class="upload-btn">
               + Bilder hinzufügen
-
-              <input
-                bind:this={imageInput}
-                type="file"
-                accept="image/*"
-                multiple
-                disabled={remainingImages === 0}
-                onchange={handleImageChange}
-                hidden
-              />
+              <input bind:this={imageInput} type="file" accept="image/*" multiple disabled={remainingImages === 0} onchange={handleImageChange} hidden/>
             </label>
           </div>
 
@@ -899,29 +652,9 @@
                   <img src={image.preview} alt="Preview" />
 
                   <div class="image-actions">
-                    <button
-                      type="button"
-                      onclick={() => moveImageLeft(index)}
-                      disabled={index === 0}
-                    >
-                      ←
-                    </button>
-
-                    <button
-                      type="button"
-                      onclick={() => moveImageRight(index)}
-                      disabled={index === selectedImages.length - 1}
-                    >
-                      →
-                    </button>
-
-                    <button
-                      type="button"
-                      class="remove-image-btn"
-                      onclick={() => removeImage(index)}
-                    >
-                      Entfernen
-                    </button>
+                    <button type="button" onclick={() => moveImageLeft(index)} disabled={index === 0}> ←</button>
+                    <button type="button" onclick={() => moveImageRight(index)} disabled={index === selectedImages.length - 1}> →</button>
+                    <button type="button" class="remove-image-btn" onclick={() => removeImage(index)}>Entfernen</button>
                   </div>
                 </div>
               {/each}
@@ -941,9 +674,7 @@
         <a href="/cars/" class="back-btn">← Zurück</a>
 
         <div class="right-actions">
-          <button type="submit" class="create-btn" disabled={isUploadingImages}>
-            Speichern
-          </button>
+          <button type="submit" class="create-btn" disabled={isUploadingImages}>Speichern</button>
         </div>
       </div>
     </form>

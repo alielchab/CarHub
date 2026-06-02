@@ -295,17 +295,10 @@ onMount(() => {
   <div class="create-container">
     <div class="create-header">
       <h1>Fahrzeugdaten ergänzen</h1>
-      <p>
-        Nicht alle Infos zur Hand? Sie können die Daten auch später ergänzen.
-      </p>
+      <p>Nicht alle Infos zur Hand? Sie können die Daten auch später ergänzen.</p>
     </div>
 
-    <form
-      bind:this={formElement}
-      method="POST"
-      action="?/create"
-      onsubmit={handleSubmit}
-    >
+    <form bind:this={formElement} method="POST" action="?/create" onsubmit={handleSubmit}>
       <input type="hidden" name="saveAs" value={clickedSaveAs} />
 
       {#each selectedImages as image}
@@ -334,11 +327,7 @@ onMount(() => {
             <div class="search-select">
               <input type="hidden" name="marke" value={selectedMake} />
 
-              <input required
-                type="text"
-                placeholder="Marke suchen..."
-                bind:value={makeSearch}
-                oninput={handleMakeTyping}
+              <input required type="text" placeholder="Marke suchen..." bind:value={makeSearch} oninput={handleMakeTyping}
                 onfocus={() => (showMakeOptions = true)}
                 onblur={() => setTimeout(() => (showMakeOptions = false), 150)}
                 autocomplete="off"
@@ -349,13 +338,7 @@ onMount(() => {
                 <div class="search-options">
                   {#if filteredMakes.length > 0}
                     {#each filteredMakes as make}
-                      <button
-                        type="button"
-                        class:selected-option={make === selectedMake}
-                        onclick={() => selectMake(make)}
-                      >
-                        {make}
-                      </button>
+                      <button type="button" class:selected-option={make === selectedMake} onclick={() => selectMake(make)}>{make}</button>
                     {/each}
                   {:else}
                     <div class="no-options">Keine Marke gefunden</div>
@@ -370,12 +353,7 @@ onMount(() => {
             <div class="search-select">
               <input type="hidden" name="modell" value={selectedModel} />
 
-              <input required
-                type="text"
-                placeholder={selectedMake
-                  ? "Modell suchen..."
-                  : "Zuerst Marke auswählen"}
-                bind:value={modelSearch}
+              <input required type="text" placeholder={selectedMake ? "Modell suchen..." : "Zuerst Marke auswählen"} bind:value={modelSearch}
                 oninput={handleModelTyping}
                 onfocus={() => selectedMake && (showModelOptions = true)}
                 onblur={() => setTimeout(() => (showModelOptions = false), 150)}
@@ -388,13 +366,7 @@ onMount(() => {
                 <div class="search-options">
                   {#if filteredModels.length > 0}
                     {#each filteredModels as model}
-                      <button
-                        type="button"
-                        class:selected-option={model === selectedModel}
-                        onclick={() => selectModel(model)}
-                      >
-                        {model}
-                      </button>
+                      <button type="button" class:selected-option={model === selectedModel} onclick={() => selectModel(model)}>{model}</button>
                     {/each}
                   {:else}
                     <div class="no-options">Kein Modell gefunden</div>
@@ -415,18 +387,8 @@ onMount(() => {
 
           <div class="field">
             <label>Art *</label>
-            <select
-              name="art"
-              required
-              bind:value={selectedArt}
-              disabled={!selectedGetriebe}
-            >
-              <option selected disabled value=""> 
-                {selectedGetriebe
-                  ? "Art auswählen"
-                  : "Zuerst Getriebe auswählen"}
-              </option>
-
+            <select name="art" required bind:value={selectedArt} disabled={!selectedGetriebe}>
+              <option selected disabled value=""> {selectedGetriebe? "Art auswählen" : "Zuerst Getriebe auswählen"}</option>
               {#each availableArten as art}
                 <option value={art}>{art}</option>
               {/each}
@@ -463,7 +425,6 @@ onMount(() => {
             <label>Antrieb *</label>
             <select name="antrieb" required>
               <option selected disabled value="">Auswählen</option>
-
               <option value="Allrad">Allrad</option>
               <option value="Hinterradantrieb">Hinterradantrieb</option>
               <option value="Vorderradantrieb">Vorderradantrieb</option>
@@ -475,40 +436,18 @@ onMount(() => {
 
             <select name="treibstoff" required>
               <option selected disabled value="">Treibstoff auswählen</option>
-
               <option value="Benzin">Benzin</option>
               <option value="Bioethanol/Benzin">Bioethanol/Benzin</option>
               <option value="Diesel">Diesel</option>
               <option value="Elektro">Elektro</option>
               <option value="Erdgas (CNG)/Benzin">Erdgas (CNG)/Benzin</option>
-              <option value="Flüssiggas (LPG)/Benzin"
-                >Flüssiggas (LPG)/Benzin</option
-              >
-
-              <option value="Mild-Hybrid Benzin/Elektro">
-                Mild-Hybrid Benzin/Elektro
-              </option>
-
-              <option value="Mild-Hybrid Diesel/Elektro">
-                Mild-Hybrid Diesel/Elektro
-              </option>
-
-              <option value="Plug-in-Hybrid Benzin/Elektro">
-                Plug-in-Hybrid Benzin/Elektro
-              </option>
-
-              <option value="Plug-in-Hybrid Diesel/Elektro">
-                Plug-in-Hybrid Diesel/Elektro
-              </option>
-
-              <option value="Voll-Hybrid Benzin/Elektro">
-                Voll-Hybrid Benzin/Elektro
-              </option>
-
-              <option value="Voll-Hybrid Diesel/Elektro">
-                Voll-Hybrid Diesel/Elektro
-              </option>
-
+              <option value="Flüssiggas (LPG)/Benzin">Flüssiggas (LPG)/Benzin</option>
+              <option value="Mild-Hybrid Benzin/Elektro">Mild-Hybrid Benzin/Elektro</option>
+              <option value="Mild-Hybrid Diesel/Elektro">Mild-Hybrid Diesel/Elektro</option>
+              <option value="Plug-in-Hybrid Benzin/Elektro">Plug-in-Hybrid Benzin/Elektro</option>
+              <option value="Plug-in-Hybrid Diesel/Elektro">Plug-in-Hybrid Diesel/Elektro</option>
+              <option value="Voll-Hybrid Benzin/Elektro">Voll-Hybrid Benzin/Elektro</option>
+              <option value="Voll-Hybrid Diesel/Elektro">Voll-Hybrid Diesel/Elektro</option>
               <option value="Wasserstoff">Wasserstoff</option>
             </select>
           </div>
@@ -519,11 +458,10 @@ onMount(() => {
           </div>
 
           <div class="field">
-            <label>Innenfarbe</label>
+            <label>Innenfarbe *</label>
 
             <select name="innenfarbe" required>
               <option selected disabled value="">Auswählen</option>
-
               <option value="anthrazit">anthrazit</option>
               <option value="beige">beige</option>
               <option value="blau">blau</option>
@@ -560,17 +498,10 @@ onMount(() => {
 
             <select name="zustand" required>
               <option selected disabled value="">Fahrzeugzustand auswählen</option>
-
               <option value="Neues Fahrzeug">Neues Fahrzeug</option>
-
-              <option value="Neues Fahrzeug mit Tageszulassung">
-                Neues Fahrzeug mit Tageszulassung
-              </option>
-
+              <option value="Neues Fahrzeug mit Tageszulassung">Neues Fahrzeug mit Tageszulassung</option>
               <option value="Occasion">Occasion</option>
-
               <option value="Oldtimer">Oldtimer</option>
-
               <option value="Vorführmodell">Vorführmodell</option>
             </select>
           </div>
@@ -604,19 +535,13 @@ onMount(() => {
 
         <div class="form-grid">
           <div class="field">
-            <label>Garantie</label>
+            <label>Garantie *</label>
 
             <select name="garantie" bind:value={selectedGarantie} required>
               <option selected disabled value=""> Garantie auswählen </option>
-
               <option value="Keine Garantie"> Keine Garantie </option>
-
               <option value="Ab Übernahme"> Ab Übernahme </option>
-
-              <option value="Ab 1. Inverkehrsetzung">
-                Ab 1. Inverkehrsetzung
-              </option>
-
+              <option value="Ab 1. Inverkehrsetzung">Ab 1. Inverkehrsetzung</option>
               <option value="Ab Datum"> Ab Datum </option>
             </select>
           </div>
@@ -657,12 +582,7 @@ onMount(() => {
               <div class="field full-width">
                 <label>Beschreibung der Garantie</label>
 
-                <textarea
-                  name="garantie_beschreibung"
-                  rows="5"
-                  maxlength="100"
-                  placeholder="Beschreibung der Garantie, wie z.B. Herstellergarantie. (Maximal 100 Zeichen)"
-                ></textarea>
+                <textarea name="garantie_beschreibung" rows="5" maxlength="100" placeholder="Beschreibung der Garantie, wie z.B. Herstellergarantie. (Maximal 100 Zeichen)"></textarea>
               </div>
             {/if}
           {/if}
@@ -694,8 +614,10 @@ onMount(() => {
         </div>
 
         <div class="section-info">
-          Bitte wählen Sie eine Treibstoffart. Dann können wir Ihnen mehr
-          Informationen anzeigen.
+         Nur PS und KW sind miteinander verknüpft und Pflichtfelder. Alle anderen Felder können unabhängig voneinander ausgefüllt werden.
+         PS und KW können durch Eingabe in eines der beiden Felder automatisch umgerechnet werden. Wenn Sie z.B. 150 PS eingeben, wird im KW-Feld automatisch 110 KW angezeigt.
+         Wenn Sie eines der beiden Felder ausfüllen, wird das andere Feld automatisch aktualisiert. Wenn Sie eines der beiden Felder löschen, wird das andere Feld ebenfalls geleert.
+         Alle anderen technischen Daten können unabhängig voneinander ausgefüllt werden, ohne dass sie miteinander verknüpft sind. Sie können z.B. die Anzahl der Türen eingeben, ohne dass dies Auswirkungen auf die PS oder KW hat. 
         </div>
 
         <div class="technical-grid">
@@ -712,23 +634,13 @@ onMount(() => {
               </div>
 
               <div class="field">
-                <label>PS</label>
-                <input
-                  name="leistung"
-                  type="number"
-                  bind:value={ps}
-                  oninput={updateKw}
-                />
+                <label>PS *</label>
+                <input required name="leistung" type="number" bind:value={ps} oninput={updateKw}/>
               </div>
 
               <div class="field">
-                <label>KW</label>
-                <input
-                  name="kw"
-                  type="number"
-                  bind:value={kw}
-                  oninput={updatePs}
-                />
+                <label>KW *</label>
+                <input name="kw" type="number" bind:value={kw} oninput={updatePs}/>
               </div>
 
               <div class="field full-width">
@@ -821,11 +733,7 @@ onMount(() => {
           <div class="field full-width">
             <label>Beschreibung</label>
 
-            <textarea
-              name="beschreibung"
-              rows="10"
-              placeholder="Beschreiben Sie das Fahrzeug..."
-            ></textarea>
+            <textarea name="beschreibung" rows="10" placeholder="Beschreiben Sie das Fahrzeug..."></textarea>
           </div>
         </div>
       </section>
@@ -843,21 +751,10 @@ onMount(() => {
               <p>{remainingImages} Bilder verfügbar</p>
             </div>
 
-            <label
-              class:disabled-upload={remainingImages === 0}
-              class="upload-btn"
-            >
+            <label class:disabled-upload={remainingImages === 0} class="upload-btn">
               + Bilder hinzufügen
 
-              <input
-                bind:this={imageInput}
-                type="file"
-                accept="image/*"
-                multiple
-                disabled={remainingImages === 0}
-                onchange={handleImageChange}
-                hidden
-              />
+              <input bind:this={imageInput} type="file" accept="image/*" multiple disabled={remainingImages === 0} onchange={handleImageChange} hidden/>
             </label>
           </div>
 
@@ -872,29 +769,9 @@ onMount(() => {
                   <img src={image.preview} alt="Preview" />
 
                   <div class="image-actions">
-                    <button
-                      type="button"
-                      onclick={() => moveImageLeft(index)}
-                      disabled={index === 0}
-                    >
-                      ←
-                    </button>
-
-                    <button
-                      type="button"
-                      onclick={() => moveImageRight(index)}
-                      disabled={index === selectedImages.length - 1}
-                    >
-                      →
-                    </button>
-
-                    <button
-                      type="button"
-                      class="remove-image-btn"
-                      onclick={() => removeImage(index)}
-                    >
-                      Entfernen
-                    </button>
+                    <button type="button" onclick={() => moveImageLeft(index)} disabled={index === 0}>←</button>
+                    <button type="button" onclick={() => moveImageRight(index)} disabled={index === selectedImages.length - 1}>→</button>
+                    <button type="button" class="remove-image-btn" onclick={() => removeImage(index)}>Entfernen</button>
                   </div>
                 </div>
               {/each}
@@ -909,29 +786,11 @@ onMount(() => {
         <a href="/cars" class="back-btn">← Zurück</a>
 
         <div class="right-actions">
-          <button
-            type="submit"
-            onclick={() => (clickedSaveAs = "entwurf")}
-            class="draft-btn"
-            disabled={isUploadingImages}
-          >
-            Entwurf
-          </button>
+          <button type="submit" onclick={() => (clickedSaveAs = "entwurf")} class="draft-btn" disabled={isUploadingImages}>Entwurf</button>
 
-          <button
-            type="submit"
-            onclick={() => (clickedSaveAs = "aktiv")}
-            class="create-btn"
-            disabled={isUploadingImages}
-          >
-            Create
-          </button>
+          <button type="submit" onclick={() => (clickedSaveAs = "aktiv")} class="create-btn" disabled={isUploadingImages}>Create</button>
         </div>
       </div>
     </form>
   </div>
 </div>
-
-<!-- {#if form?.result}
-  {form.result.message}
-{/if} -->

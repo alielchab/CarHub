@@ -24,17 +24,83 @@ button {
    Home
    ============================== */
 
-.logo {
-  display: block;
-  margin: auto;
-  width: 50%;
+
+
+.home-page {
+  min-height: calc(100vh - 62px);
+  background: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 48px 24px;
 }
 
-.welcome_page {
+.hero-section {
+  width: min(900px, 100%);
   text-align: center;
-  margin-top: 50px;
-  font-size: 2.5em;
-  color: #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-section h1 {
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 500;
+  color: #202632;
+}
+
+.logo {
+  width: min(560px, 90%);
+  height: auto;
+  display: block;
+}
+
+.explore-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 240px;
+  height: 56px;
+  padding: 0 32px;
+  background: #0b63ff;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 999px;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  box-shadow: 0 12px 28px rgba(11, 99, 255, 0.25);
+}
+
+.explore-button:hover {
+  background: #084ed1;
+  transform: translateY(-2px);
+  box-shadow: 0 16px 34px rgba(11, 99, 255, 0.32);
+}
+
+.explore-button:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 600px) {
+  .home-page {
+    align-items: flex-start;
+    padding-top: 56px;
+  }
+
+  .hero-section h1 {
+    margin-bottom: 36px;
+    font-size: 32px;
+  }
+
+  .logo {
+    margin-bottom: 32px;
+  }
+
+  .explore-button {
+    width: 100%;
+    max-width: 320px;
+  }
 }
 
 /* ==============================
@@ -128,6 +194,11 @@ button {
 
 .user-menu form button {
   color: #c40000;
+}
+
+.active-nav {
+  color: #0067ff !important;
+  font-weight: 800 !important;
 }
 
 /* ==============================
@@ -896,7 +967,8 @@ button {
 }
 
 .price {
-  color: red;
+  color: #07111f;
+  font-weight: 700;
   font-size: 26px;
   margin: 8px 0 25px;
 }
@@ -1393,3 +1465,6 @@ button {
     align-items: stretch;
   }
 }
+
+
+

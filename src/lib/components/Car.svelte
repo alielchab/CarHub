@@ -1,5 +1,10 @@
 <script>
     let { car } = $props();
+
+    function formatNumber(value) {
+    if (!value) return "-";
+    return new Intl.NumberFormat("de-CH").format(Number(value));
+  }
 </script>
 
 <div class="car-row">
@@ -12,9 +17,7 @@
 
         <div>
             <span class="badge">1 DAY</span>
-
             <h3>{car.marke} {car.modell}</h3>
-
             <div class="car-actions">
                 <!-- Action Aktiv -->
                 {#if car.status === "aktiv" && !car.topListing}
@@ -142,8 +145,8 @@
         </div>
     </div>
 
-    <div>{car.inverkehrsetzung}</div>
-    <div>{car.preis}.-</div>
-    <div>{car.kilometer || "-"}</div>
-    <div>{car.views || "-"}</div>
+    <div>{car.inverkehrsetzung ? new Date(car.inverkehrsetzung).getFullYear() : "-"}</div>
+    <div>{formatNumber(car.preis)}.-</div>
+    <div>{formatNumber(car.kilometer) || "-"}</div>
+    <div>{formatNumber(car.views) || "-"}</div>
 </div>

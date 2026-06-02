@@ -181,10 +181,7 @@
     </div>
 
     <div class="public-filter-grid">
-        <select
-            bind:value={selectedMarke}
-            onchange={() => (selectedModell = "")}
-        >
+        <select bind:value={selectedMarke} onchange={() => (selectedModell = "")}>
             <option selected disabled value="">Marke</option>
             {#each marken as [value, count]}
                 <option {value}>{value} ({count})</option>
@@ -192,9 +189,7 @@
         </select>
 
         <select bind:value={selectedModell} disabled={!selectedMarke}>
-            <option disabled value="">
-                {selectedMarke ? "Modell" : "Zuerst Marke auswählen"}
-            </option>
+            <option disabled value=""> {selectedMarke ? "Modell" : "Zuerst Marke auswählen"}</option>
             {#each modelle as [value, count]}
                 <option {value}>{value} ({count})</option>
             {/each}
@@ -238,13 +233,9 @@
 
     <div class="filter-bottom">
         <div class="filter-actions-row">
-            <button type="button" class="reset-btn" onclick={resetFilters}>
-                ↻ Filter zurücksetzen
-            </button>
-
+            <button type="button" class="reset-btn" onclick={resetFilters}>↻ Filter zurücksetzen</button>
             <select bind:value={selectedSort} class="sort-select">
-                <option value="createdAt_desc">⇅ Neueste Inserate zuerst</option
-                >
+                <option value="createdAt_desc">⇅ Neueste Inserate zuerst</option>
                 <option value="createdAt_asc">⇅ Älteste Inserate zuerst</option>
                 <option value="marke_asc">Marke A-Z</option>
                 <option value="marke_desc">Marke Z-A</option>
