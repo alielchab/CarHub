@@ -1,5 +1,5 @@
 <script>
-  import favicon from "$lib/assets/favicon.svg";
+  import favicon from "$lib/assets/carhub_logo_transparent.png";
   import "./styles/style.css";
   import { page } from "$app/state";
 
