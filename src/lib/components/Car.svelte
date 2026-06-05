@@ -16,7 +16,6 @@
         <img src={car.mainImage} alt={car.marke} width="100" height="100" />
 
         <div>
-            <span class="badge">1 DAY</span>
             <h3>{car.marke} {car.modell}</h3>
             <div class="car-actions">
                 <!-- Action Aktiv -->
