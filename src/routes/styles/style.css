@@ -365,15 +365,7 @@ button {
   font-weight: 700;
 }
 
-.badge {
-  display: inline-block;
-  background: #9ce79c;
-  color: #111;
-  font-size: 11px;
-  padding: 3px 6px;
-  border-radius: 3px;
-  font-weight: 700;
-}
+
 
 .car-actions {
   display: flex;
