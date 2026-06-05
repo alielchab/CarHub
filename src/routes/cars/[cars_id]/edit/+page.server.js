@@ -1,5 +1,6 @@
 import db from '$lib/db.js';
 import { fail, redirect } from '@sveltejs/kit';
+import { deleteCloudinaryImage } from "$lib/server/cloudinary.js";
 
 export async function load({ locals, params }) {
   if (!locals.user) {
@@ -28,6 +29,19 @@ export const actions = {
     }
 
     const data = await request.formData();
+    const images = data
+  .getAll("images")
+  .map((value) => JSON.parse(String(value)))
+  .filter((image) => image.url);
+
+const removedPublicIds = data
+  .getAll("removedPublicIds")
+  .map(String)
+  .filter(Boolean);
+
+for (const publicId of removedPublicIds) {
+  await deleteCloudinaryImage(publicId);
+}
 
     const imageUrls = data.getAll('imageUrls').map(String).filter(Boolean);
 
@@ -87,8 +101,8 @@ export const actions = {
       stammnummer: data.get('stammnummer'),
       wagen_nr: data.get('wagen_nr'),
 
-      images: imageUrls,
-      mainImage: imageUrls[0] ?? null,
+      images,
+      mainImage: images[0]?.url ?? null,
 
       updatedAt: new Date()
     };

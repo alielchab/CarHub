@@ -301,11 +301,18 @@ onMount(() => {
     <form bind:this={formElement} method="POST" action="?/create" onsubmit={handleSubmit}>
       <input type="hidden" name="saveAs" value={clickedSaveAs} />
 
-      {#each selectedImages as image}
-        {#if image.url}
-          <input type="hidden" name="imageUrls" value={image.url} />
-        {/if}
-      {/each}
+     {#each selectedImages as image}
+  {#if image.url}
+    <input
+      type="hidden"
+      name="images"
+      value={JSON.stringify({
+        url: image.url,
+        publicId: image.publicId
+      })}
+    />
+  {/if}
+{/each}
 
       {#if uploadError}
         <p class="error-message">{uploadError}</p>

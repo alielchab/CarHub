@@ -27,18 +27,31 @@
   let isSubmittingAfterUpload = $state(false);
   let isUploadingImages = $state(false);
   let uploadError = $state("");
+  let removedImages = $state([]);
 
   const maxImages = 5;
 
-  let selectedImages = $state(
-    (car.images ?? []).map((url) => ({
-      type: "existing",
-      url,
-      preview: url,
+ let selectedImages = $state(
+  (car.images ?? []).map((image) => {
+    if (typeof image === "string") {
+      return {
+        file: null,
+        preview: image,
+        url: image,
+        publicId: null,
+        existing: true
+      };
+    }
+
+    return {
       file: null,
-      publicId: null,
-    })),
-  );
+      preview: image.url,
+      url: image.url,
+      publicId: image.publicId,
+      existing: true
+    };
+  })
+);
 
   let remainingImages = $derived(maxImages - selectedImages.length);
 
@@ -185,17 +198,19 @@
     updateFileInput();
   }
 
-  function removeImage(index) {
-    const image = selectedImages[index];
+function removeImage(index) {
+  const image = selectedImages[index];
 
-    if (image.type === "new" && image.preview) {
-      URL.revokeObjectURL(image.preview);
-    }
-
-    selectedImages = selectedImages.filter((_, i) => i !== index);
-
-    updateFileInput();
+  if (image.publicId) {
+    removedImages = [...removedImages, image.publicId];
   }
+
+  if (image.preview && image.file) {
+    URL.revokeObjectURL(image.preview);
+  }
+
+  selectedImages = selectedImages.filter((_, i) => i !== index);
+}
 
   function moveImageLeft(index) {
     if (index === 0) return;
@@ -229,12 +244,22 @@
       <p>Bearbeite die gespeicherten Fahrzeugdaten.</p>
     </div>
     <form bind:this={formElement} method="POST" action="?/update" onsubmit={handleSubmit}>
-      {#each selectedImages as image}
-        {#if image.url}
-          <input type="hidden" name="imageUrls" value={image.url} />
-        {/if}
-      {/each}
+    {#each selectedImages as image}
+  {#if image.url}
+    <input
+      type="hidden"
+      name="images"
+      value={JSON.stringify({
+        url: image.url,
+        publicId: image.publicId
+      })}
+    />
+  {/if}
+{/each}
 
+{#each removedImages as publicId}
+  <input type="hidden" name="removedPublicIds" value={publicId} />
+{/each}
       {#if uploadError}
         <p class="error-message">{uploadError}</p>
       {/if}

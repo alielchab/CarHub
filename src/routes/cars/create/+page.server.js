@@ -14,12 +14,17 @@ export const actions = {
     }
 
     const data = await request.formData();
-
     const saveAs = data.get('saveAs');
-    const imageUrls = data.getAll('imageUrls').map(String).filter(Boolean);
 
-    if (imageUrls.length > 30) {
-      return fail(400, { error: 'Maximal 30 Bilder erlaubt' });
+    const images = data
+      .getAll('images')
+      .map((value) => JSON.parse(String(value)))
+      .filter((image) => image.url && image.publicId);
+
+    if (images.length > 5) {
+      return fail(400, {
+        error: 'Maximal 5 Bilder erlaubt.'
+      });
     }
 
     const car = {
@@ -80,8 +85,10 @@ export const actions = {
       wagen_nr: data.get('wagen_nr'),
 
       // Bilder von Cloudinary
-      images: imageUrls,
-      mainImage: imageUrls[0] ?? null,
+      images,
+      mainImage: images[0]?.url ?? null,
+
+      inventor: data.get('inventor'),
 
       createdAt: new Date()
     };

@@ -2,16 +2,25 @@
   let { data } = $props();
 
   const car = data.car ?? data;
+const images = (car.images ?? []).map((image) => {
+  if (typeof image === "string") {
+    return {
+      url: image,
+      publicId: null
+    };
+  }
 
-  const images = car.images ?? [];
+  return image;
+});
 
-  let selectedImage = $state(car.mainImage ?? images[0] ?? "");
-  let galleryOpen = $state(false);
-  let galleryIndex = $state(0);
+let selectedImage = $state(car.mainImage ?? images[0]?.url ?? "");
+let galleryIndex = $state(0);
+let galleryOpen = $state(false);
+
 
   function openGallery(index) {
     galleryIndex = index;
-    selectedImage = images[index];
+  selectedImage = images[index]?.url ?? "";
     galleryOpen = true;
   }
 
@@ -20,18 +29,18 @@
   }
 
   function nextImage() {
-    if (images.length === 0) return;
+  if (images.length === 0) return;
 
-    galleryIndex = (galleryIndex + 1) % images.length;
-    selectedImage = images[galleryIndex];
-  }
+  galleryIndex = (galleryIndex + 1) % images.length;
+  selectedImage = images[galleryIndex].url;
+}
 
   function previousImage() {
-    if (images.length === 0) return;
+  if (images.length === 0) return;
 
-    galleryIndex = (galleryIndex - 1 + images.length) % images.length;
-    selectedImage = images[galleryIndex];
-  }
+  galleryIndex = (galleryIndex - 1 + images.length) % images.length;
+  selectedImage = images[galleryIndex].url;
+}
 
   function selectImage(index) {
     galleryIndex = index;
@@ -91,11 +100,11 @@
 
         {#if images.length > 1}
           <div class="thumbnail-grid">
-            {#each images as image, index}
-              <button type="button" class:selected={index === galleryIndex} onclick={() => openGallery(index)} aria-label={`Bild ${index + 1} in Galerie öffnen`}>
-                <img src={image} alt="Fahrzeugbild" />
-              </button>
-            {/each}
+          {#each images as image, index}
+            <button type="button" class:selected={index === galleryIndex} onclick={() => openGallery(index)}>
+              <img src={image.url} alt="Fahrzeugbild" />
+            </button>
+          {/each}
           </div>
         {/if}
       </main>
@@ -341,7 +350,7 @@
 
     <div class="gallery-image-wrap">
       <img
-        src={images[galleryIndex]}
+        src={images[galleryIndex]?.url}
         alt={`${car.marke} ${car.modell}`}
         class="gallery-image"
       />

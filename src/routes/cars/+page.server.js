@@ -1,5 +1,6 @@
 import db from '$lib/db.js';
-import { fail, redirect } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
+import { deleteCloudinaryImage } from '$lib/server/cloudinary.js';
 
 function requireLogin(locals) {
   if (!locals.user) {
@@ -74,7 +75,19 @@ export const actions = {
     requireLogin(locals);
 
     const data = await request.formData();
-    await db.deleteCar(data.get('id'));
+    const id = data.get('id');
+
+    const car = await db.getCar(id);
+
+    if (car?.images?.length) {
+      for (const image of car.images) {
+        if (typeof image === 'object' && image.publicId) {
+          await deleteCloudinaryImage(image.publicId);
+        }
+      }
+    }
+
+    await db.deleteCar(id);
 
     throw redirect(303, '/cars');
   }
