@@ -19,6 +19,8 @@
 
 <!-- WICHTIG: DIE KAPITELSTRUKTUR DARF NICHT VERÄNDERT WERDEN! -->
 
+<!-- Diese Vorlage ist für eine README.md im Repository gedacht. Abschnitte mit [Optional] können weggelassen werden, wenn in den Übungen nichts anderes verlangt wird. -->
+
 ## 1. Ausgangslage
 
 CarHub ist ein webbasierter Prototyp für ein Autoverwaltungstool. Die Anwendung orientiert sich funktional an Fahrzeugplattformen wie AutoScout24, ist jedoch bewusst auf einen kleineren und überschaubaren Anwendungsfall reduziert. Ein Administrator kann Fahrzeuge erfassen, verwalten, bearbeiten, mit Bildern versehen und öffentlich präsentieren. Besucher:innen können Fahrzeuge durchsuchen, filtern, sortieren und Detailinformationen inklusive Bildergalerie ansehen.
@@ -176,6 +178,19 @@ Die Umsetzung erfolgte iterativ. Einzelne Funktionen wurden nacheinander entwick
   - Bootstrap CDN in `app.html`
   - Eigenes CSS in [src/routes/styles/style.css](src/routes/styles/style.css)
   - NHTSA Vehicle API für Marken und Modelle
+
+  - **Tooling:**
+  - **Visual Studio Code** als Entwicklungsumgebung.
+  - **Svelte for VS Code** für Syntax-Highlighting, Svelte-Unterstützung und Fehlermeldungen.
+  - **Git & GitHub** für Versionsverwaltung, Repository-Ablage und Abgabe des Sourcecodes.
+  - **Netlify Dashboard** für Deployment, Build-Konfiguration und Environment Variables.
+  - **MongoDB Atlas** als Cloud-Datenbank für Fahrzeugdaten.
+  - **MongoDB Compass** zur lokalen Kontrolle und Bearbeitung der gespeicherten Fahrzeugdaten.
+  - **Cloudinary Dashboard / Media Library** zur Verwaltung der hochgeladenen Fahrzeugbilder.
+  - **Browser DevTools** für Debugging, Responsive-Checks, Netzwerkprüfung und Konsolenmeldungen.
+  - **Terminal / npm** zum Installieren von Dependencies, Starten des lokalen Entwicklungsservers und Ausführen von Builds.
+
+**KI-Deklaration:** Siehe Kapitel 6 [KI-Deklaration](#6-ki-deklaration)
 
 - **Struktur & Komponenten:**
   - [src/routes/](src/routes/) enthält Seiten und Server Actions.
