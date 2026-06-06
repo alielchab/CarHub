@@ -156,7 +156,7 @@ Die Umsetzung erfolgte iterativ. Einzelne Funktionen wurden nacheinander entwick
 | Fahrzeugverwaltung | [docs/screenshots/desktop/fahrzeugverwaltungs_page_mit_aktive_Fahrzeuge.png](docs/screenshots/desktop/fahrzeugverwaltungs_page_mit_aktive_Fahrzeuge.png) | Admin-Tabelle mit Fahrzeugstatus, Views, Aktionen und Top-Listing. |
 | Create Page | [docs/screenshots/desktop/create_page.png](docs/screenshots/desktop/create_page.png) | Formular zum Erfassen von Fahrzeugdaten und Bildern. |
 | Öffentliche Fahrzeugliste | [docs/screenshots/desktop/fahrzeuge_page.png](docs/screenshots/desktop/fahrzeuge_page.png) | Kartenansicht mit Filter, Sortierung und Ergebnisanzahl. |
-| Top Listing | [docs/screenshots/desktop/top_listing_mit_Fahrzeugen.png](docs/screenshots/desktop/top_listing_mit_Fahrzeugen.png) | Separate Ansicht für hervorgehobene Fahrzeuge. |
+| Top Listing | [docs/screenshots/desktop/top_listing_mit_Fahrzeuge.png](docs/screenshots/desktop/top_listing_mit_Fahrzeugen.png) | Separate Ansicht für hervorgehobene Fahrzeuge. |
 | Detailseite | [docs/screenshots/desktop/Fahrzeug_details_page.png](docs/screenshots/desktop/Fahrzeug_details_page.png) | Fahrzeugdaten, Hauptbild, Thumbnails und Galerie. |
 
 - **Designentscheidungen:**
